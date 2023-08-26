@@ -127,8 +127,35 @@ public class FileServlet extends HttpServlet {
                     }
                 }
             } else {
+            String path = ipTablesClients.get(request.getRemoteAddr());
+            File folder = new File(path);
+            if (folder.exists() && folder.isDirectory()) {
+                List<File> filesList = Arrays.asList(folder.listFiles());
+
+                int itemsPerPage = 15;
+                String pageParam = request.getParameter("page");
+                int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                int startIdx = (currentPage - 1) * itemsPerPage;
+                int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
+
+                List<File> itemsToShow = filesList.subList(startIdx, endIdx);
+
+                long creationTime = folder.lastModified();
+                Date creationDate = new Date(creationTime);
+
+                request.setAttribute("creationDate", creationDate);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("itemsPerPage", itemsPerPage);
+                request.setAttribute("files", itemsToShow);
+                request.setAttribute("filesList", filesList);
+                request.setAttribute("currentPath", path.replace("F:", "home_cloud"));
+                request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
+            } else {
                 response.setContentType("text/plain");
                 response.getWriter().println("File not found: " + requestedFilePath);
+            }
+                /*response.setContentType("text/plain");
+                response.getWriter().println("File not found: " + requestedFilePath);*/
             }
         }
     private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
