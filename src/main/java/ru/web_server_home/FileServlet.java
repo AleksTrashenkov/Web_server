@@ -129,6 +129,7 @@ public class FileServlet extends HttpServlet {
             } else {
             String path = ipTablesClients.get(request.getRemoteAddr());
             File folder = new File(path);
+            ipTablesClients.put(request.getRemoteAddr(), path);
 
             if (folder.exists() && folder.isDirectory()) {
                 List<File> filesList = Arrays.asList(folder.listFiles());
