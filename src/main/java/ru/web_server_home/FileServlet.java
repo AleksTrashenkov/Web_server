@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 public class FileServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String UPLOAD_DIRECTORY = "F:/cloud";
-    public static Multimap<String, String> filesCloud = ArrayListMultimap.create();
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
@@ -41,20 +40,11 @@ public class FileServlet extends HttpServlet {
                     if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                         String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
                         deleteFolder(folderPath);
-                        try {
-                            response.sendRedirect(ipTablesClients.get(request.getRemoteAddr()).replace("F:","/home_cloud"));
-                            /*response.setContentType("text/plain");
-                            response.getWriter().println("Папка удалена: " + requestedFilePath);*/
-                        } catch (IOException e) {}
+                            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud",""));
                     } else {
                         String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
-                            deleteFile(locPath);
-                            try {
-                                response.sendRedirect(ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:", "/home_cloud"));
-                            /*response.setContentType("text/plain");
-                            response.getWriter().println("Файл удален: " + requestedFilePath);*/
-                            } catch (IOException e) {
-                            }
+                        deleteFile(locPath);
+                        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                     }
                 } else if ("view".equals(action)) {
                     try {
@@ -107,8 +97,8 @@ public class FileServlet extends HttpServlet {
             }
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        response.sendRedirect(request.getContextPath() + ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:", ""));
-    }
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+        }
 
     private void serveFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
        String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
@@ -128,8 +118,6 @@ public class FileServlet extends HttpServlet {
                 }
             } else {
             showFolderContents(request, response, requestedFilePath);
-                /*response.setContentType("text/plain");
-                response.getWriter().println("File not found: " + requestedFilePath);*/
             }
         }
     private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
@@ -202,7 +190,7 @@ public class FileServlet extends HttpServlet {
             } else {
                 serveFile(requestedFilePath, response, request);
             }
-        } catch (IOException e) {
+        } catch (IOException ez) {
             // Обработка ошибок
         }
     }
