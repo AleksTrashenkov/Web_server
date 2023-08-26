@@ -129,6 +129,7 @@ public class FileServlet extends HttpServlet {
             } else {
             String path = ipTablesClients.get(request.getRemoteAddr());
             File folder = new File(path);
+
             if (folder.exists() && folder.isDirectory()) {
                 List<File> filesList = Arrays.asList(folder.listFiles());
 
@@ -151,8 +152,9 @@ public class FileServlet extends HttpServlet {
                 request.setAttribute("currentPath", path.replace("F:", "home_cloud"));
                 request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
             } else {
-                response.setContentType("text/plain");
-                response.getWriter().println("File not found: " + requestedFilePath);
+                showFolderContentsRUSPath(request, response, requestedFilePath);
+                /*response.setContentType("text/plain");
+                response.getWriter().println("File not found: " + requestedFilePath);*/
             }
                 /*response.setContentType("text/plain");
                 response.getWriter().println("File not found: " + requestedFilePath);*/
@@ -197,7 +199,7 @@ public class FileServlet extends HttpServlet {
         try {
             if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                 String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClientsFiles.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
-                ipTablesClients.put(request.getRemoteAddr(), folderPath.replace(requestedFilePath, ""));
+                ipTablesClients.put(request.getRemoteAddr(), folderPath.replace(requestedFilePath.replace("/",""), ""));
                 ipTablesClientsFiles.put(request.getRemoteAddr(), folderPath);
                 File folder = new File(folderPath);
 
