@@ -90,23 +90,11 @@ public class FileServlet extends HttpServlet {
             case "createFolder" :
                 createFolder(response, request);
                 break;
-            default:
-                Collection<Part> fileParts = request.getParts();
-
-                for (Part filePart : fileParts) {
-                    if (filePart != null && filePart.getSize() > 0) {
-                        String fileName = getSubmittedFileName(filePart);
-
-                        String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName;
-                        filePart.write(filePath);
-                    }
-                }
-                // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-                showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+            case "loader" :
+                loader(request, response);
                 break;
         }
-        }
-
+    }
     private void serveFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
        String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
         File file = new File(filePath);
@@ -231,21 +219,7 @@ public class FileServlet extends HttpServlet {
     public void createFolder(HttpServletResponse response, HttpServletRequest request) throws ServletException {
         //String currentPath = request.getParameter("currentPath");
         String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
-        String newFolderName = request.getParameter("newFolderName");
-        try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
-        {
-            // запись всей строки
-            String text = "currentPath: " + currentPath + "\n" +
-                    "newFolderName: " + newFolderName + "\n" +
-                    ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
-            writer.write(text);
-
-            writer.flush();
-        }
-        catch(IOException ex){
-
-            System.out.println(ex.getMessage());
-        }
+        String newFolderName = request.getParameter("newFolderNameCreate");
         if (currentPath != null && newFolderName != null && !newFolderName.isEmpty()) {
             String fullPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
             File newFolder = new File(fullPath);
@@ -255,38 +229,46 @@ public class FileServlet extends HttpServlet {
         }
         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
     }
-    public static void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // String fullPath = FileServlet.ipTablesClients.get(request.getRemoteAddr()) + requestedFilePath;
-        try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
-        {
-            // запись всей строки
-            String text = "Hello Gold!";
-            writer.write(text);
-
-            writer.flush();
-        }
-        catch(IOException ex){
-
-            System.out.println(ex.getMessage());
-        }
+    public void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String oldFileName = request.getParameter("oldFileName");
         String newFileName = request.getParameter("newFileName");
-        String oldPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + oldFileName;
-       // String oldPath = getFiles(UPLOAD_DIRECTORY).get(oldFileName);
-        String newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + newFileName;
-       //String newPath = getFiles(UPLOAD_DIRECTORY).get(newFileName);
+
+        String oldPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + oldFileName;
+        String newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFileName;
         File oldFile = new File(oldPath);
         File newFile = new File(newPath);
 
         if (oldFile.exists()) {
             if (oldFile.renameTo(newFile)) {
-                response.getWriter().write("success"); // Отправляем успешный ответ
-            } else {
+                //response.getWriter().write("success"); // Отправляем успешный ответ
+                try {
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+                }catch (ServletException ex) {}
+                } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
             }
         } else {
             response.getWriter().write("file_not_found"); // Отправляем ответ, что файл не найден
         }
+    }
+    public void loader (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Collection<Part> fileParts = request.getParts();
+
+        for (Part filePart : fileParts) {
+            if (filePart != null && filePart.getSize() > 0 && !filePart.getName().equals("action")) {
+                String fileName = getSubmittedFileName(filePart);
+
+                String filePath;
+                if (new File(ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName).exists()) {
+                    filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName+"(1)";
+                } else {
+                    filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName;
+                }
+                filePart.write(filePath);
+            }
+        }
+        // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
     }
     }
 

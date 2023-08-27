@@ -268,7 +268,7 @@
 <div id="renameDialog" class="rename-dialog">
     <div class="dialog-content">
         <h2>Изменение имени</h2>
-        <form id="renameForm" action="${pageContext.request.contextPath}/cloud" method="post" enctype="multipart/form-data"> <!-- Добавлен атрибут action -->
+        <form id="renameForm" action="${pageContext.request.contextPath}/cloud/" method="post" enctype="multipart/form-data"> <!-- Добавлен атрибут action -->
             <label for="newFileName">Новое имя:</label>
             <input type="text" id="newFileName" name="newFileName" required>
             <input type="hidden" name="action" value="rename">
@@ -301,10 +301,11 @@
                 }
             %>
             <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
-<form class="upload-form" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud" accept-charset="UTF-8">
-    <input type="file" name="files" multiple="multiple" />
-    <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}" />
-    <input type="submit" value="Загрузка" />
+<form class="upload-form" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/">
+    <input type="file" name="files" multiple="multiple">
+    <input type="hidden" name="action" value="loader">
+    <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
+    <input type="submit" value="Загрузка">
 </form>
 <div class="breadcrumb">
 <a href="${pageContext.request.contextPath}/cloud/">Главная</a>
@@ -326,11 +327,11 @@
     </div>
      &nbsp;
     <div class="create-folder-form">
-        <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud" accept-charset="UTF-8">
-            <input type="text" name="newFolderNameCreate" placeholder="Имя новой папки" /> <!-- Изменено имя поля здесь -->
-            <input type="hidden" name="action" value="createFolder" />
-            <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}" />
-            <input type="submit" value="Создать папку" />
+        <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
+            <input type="text" name="newFolderNameCreate" placeholder="Имя новой папки" required> <!-- Изменено имя поля здесь -->
+            <input type="hidden" name="action" value="createFolder">
+            <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
+            <input type="submit" value="Создать папку">
         </form>
     </div>
 <ul class="file-list">
