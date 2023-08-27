@@ -229,8 +229,8 @@ public class FileServlet extends HttpServlet {
         return null;
     }
     public void createFolder(HttpServletResponse response, HttpServletRequest request) throws ServletException {
-        String currentPath = request.getParameter("currentPath");
-        //String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
+        //String currentPath = request.getParameter("currentPath");
+        String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
         String newFolderName = request.getParameter("newFolderName");
         try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
         {
@@ -271,9 +271,9 @@ public class FileServlet extends HttpServlet {
         }
         String oldFileName = request.getParameter("oldFileName");
         String newFileName = request.getParameter("newFileName");
-        String oldPath = ipTablesClients.get(request.getRemoteAddr()) + oldFileName;
+        String oldPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + oldFileName;
        // String oldPath = getFiles(UPLOAD_DIRECTORY).get(oldFileName);
-        String newPath = ipTablesClients.get(request.getRemoteAddr()) + newFileName;
+        String newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + newFileName;
        //String newPath = getFiles(UPLOAD_DIRECTORY).get(newFileName);
         File oldFile = new File(oldPath);
         File newFile = new File(newPath);
