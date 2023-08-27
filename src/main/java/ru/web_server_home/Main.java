@@ -19,16 +19,13 @@ public class Main {
         if (getStructure(directory).get("Документы").isEmpty()) {
             System.out.println("null");
         } else {
-            System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA")).findFirst().toString().replace("Optional[", "").replace("]", ""));
+            System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
+            System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
         }
     }
     public static Multimap<String, String> getStructure(String directory) {
         scanDirectory(new File(directory), "");
         return structureCloud;
-    }
-    public static Multimap<String, String> getFiles (String directory){
-        scanDirectory(new File(directory), "");
-        return filesCloud;
     }
     private static void scanDirectory(File dir, String parentPath) {
         if (dir.isDirectory()) {

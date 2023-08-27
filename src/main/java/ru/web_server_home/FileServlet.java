@@ -54,6 +54,8 @@ public class FileServlet extends HttpServlet {
                     try {
                         rename(request, response, requestedFilePath);
                     }catch (IOException ex) {}
+                } else if ("createFolder".equals(action)) {
+                    createFolder(response, request);
                 } else {
                     if (requestedFilePath.endsWith("/")) {
                         showFolderContentsRUSPath(request, response, requestedFilePath);
@@ -221,10 +223,32 @@ public class FileServlet extends HttpServlet {
         }
         return null;
     }
-    public static boolean containsRussianLetters(String text) {
-        Pattern pattern = Pattern.compile("[а-яА-ЯёЁ]");
-        Matcher matcher = pattern.matcher(text);
-        return matcher.find();
+    public void createFolder(HttpServletResponse response, HttpServletRequest request) throws ServletException {
+        String currentPath = request.getParameter("currentPath");
+        //String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
+        String newFolderName = request.getParameter("newFolderName");
+        try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
+        {
+            // запись всей строки
+            String text = "currentPath: " + currentPath + "\n" +
+                    "newFolderName: " + newFolderName + "\n" +
+                    ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
+            writer.write(text);
+
+            writer.flush();
+        }
+        catch(IOException ex){
+
+            System.out.println(ex.getMessage());
+        }
+        if (currentPath != null && newFolderName != null && !newFolderName.isEmpty()) {
+            String fullPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
+            File newFolder = new File(fullPath);
+            if (!newFolder.exists()) {
+                newFolder.mkdirs();
+            }
+        }
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
     }
     public static void rename (HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws IOException {
         // String fullPath = FileServlet.ipTablesClients.get(request.getRemoteAddr()) + requestedFilePath;
