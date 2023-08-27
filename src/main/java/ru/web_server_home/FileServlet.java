@@ -50,13 +50,7 @@ public class FileServlet extends HttpServlet {
                     try {
                         serveFile(requestedFilePath, response, request);
                     } catch (IOException es) {}
-                } else if ("rename".equals(action)) {
-                    try {
-                        rename(request, response, requestedFilePath);
-                    }catch (IOException ex) {}
-                } else if ("createFolder".equals(action)) {
-                    createFolder(response, request);
-                } else {
+                }  else {
                     if (requestedFilePath.endsWith("/")) {
                         showFolderContentsRUSPath(request, response, requestedFilePath);
                     } else {
@@ -88,18 +82,29 @@ public class FileServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Collection<Part> fileParts = request.getParts();
+        String action = request.getParameter("action");
+        switch (action) {
+            case "rename" :
+                rename(request, response);
+                break;
+            case "createFolder" :
+                createFolder(response, request);
+                break;
+            default:
+                Collection<Part> fileParts = request.getParts();
 
-        for (Part filePart : fileParts) {
-            if (filePart != null && filePart.getSize() > 0) {
-                String fileName = getSubmittedFileName(filePart);
+                for (Part filePart : fileParts) {
+                    if (filePart != null && filePart.getSize() > 0) {
+                        String fileName = getSubmittedFileName(filePart);
 
-                String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName;
-                filePart.write(filePath);
-            }
+                        String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName;
+                        filePart.write(filePath);
+                    }
+                }
+                // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
+                showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+                break;
         }
-        // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
         }
 
     private void serveFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
@@ -250,7 +255,7 @@ public class FileServlet extends HttpServlet {
         }
         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
     }
-    public static void rename (HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws IOException {
+    public static void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         // String fullPath = FileServlet.ipTablesClients.get(request.getRemoteAddr()) + requestedFilePath;
         try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
         {
