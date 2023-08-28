@@ -56,16 +56,16 @@ public class FileServlet extends HttpServlet {
                     }
                     break;
                 default:
-                    if (requestedFilePath.endsWith("/")) {
-                        showFolderContentsRUSPath(request, response, requestedFilePath);
-                    } else {
-                        String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
-                        try {
-                            response.sendRedirect(redirectPath);
-                        } catch (IOException e) {
-                        }
-                    }
                     break;
+            }
+            if (requestedFilePath.endsWith("/")) {
+                showFolderContentsRUSPath(request, response, requestedFilePath);
+            } else {
+                String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
+                try {
+                    response.sendRedirect(redirectPath);
+                } catch (IOException e) {
+                }
             }
         }
     }
