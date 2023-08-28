@@ -34,42 +34,35 @@ public class FileServlet extends HttpServlet {
             showFolderContents(request, response, requestedFilePath);
         } else {
             String action = request.getParameter("action");
-            switch (action) {
-                case "download":
-                    showFolderContentsRUSPath(request, response, requestedFilePath);
-                    break;
-                case "delete":
-                    if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
-                        String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
-                        deleteFolder(folderPath);
-                        showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
-                    } else {
-                        String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
-                        deleteFile(locPath);
-                        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
-                    }
-                    break;
-                case "view":
-                    try {
-                        serveFile(requestedFilePath, response, request);
-                    } catch (IOException es) {
-                    }
-                    break;
-                default:
-                    break;
-            }
-            if (requestedFilePath.endsWith("/")) {
+            if ("download".equals(action)) {
                 showFolderContentsRUSPath(request, response, requestedFilePath);
-            } else {
-                String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
+            } else if ("delete".equals(action)) {
+                if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
+                    String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
+                    deleteFolder(folderPath);
+                    showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud",""));
+                } else {
+                    String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
+                    deleteFile(locPath);
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+                }
+            } else if ("view".equals(action)) {
                 try {
-                    response.sendRedirect(redirectPath);
-                } catch (IOException e) {
+                    serveFile(requestedFilePath, response, request);
+                } catch (IOException es) {}
+            }  else {
+                if (requestedFilePath.endsWith("/")) {
+                    showFolderContentsRUSPath(request, response, requestedFilePath);
+                } else {
+                    String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
+                    try {
+                        response.sendRedirect(redirectPath);
+                    } catch (IOException e) {
+                    }
                 }
             }
         }
     }
-
     public static Multimap<String, String> getStructure(String directory) {
         scanDirectory(new File(directory), "");
         return structureCloud;
