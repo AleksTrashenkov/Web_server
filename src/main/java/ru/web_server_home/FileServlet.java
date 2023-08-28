@@ -40,7 +40,7 @@ public class FileServlet extends HttpServlet {
                 if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                     String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
                     deleteFolder(folderPath);
-                    showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud",""));
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
                 } else {
                     String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
                     deleteFile(locPath);
