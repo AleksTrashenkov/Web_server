@@ -39,13 +39,11 @@ public class FileServlet extends HttpServlet {
             } else if ("delete".equals(action)) {
                 if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                     String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
-                    deleteFolder(folderPath);
-                    showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud",""));
-                } else {
+                    deleteFolder(folderPath, response, request);
+                    } else {
                     String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
-                    deleteFile(locPath);
-                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
-                }
+                    deleteFile(locPath, response, request);
+                    }
             } else if ("view".equals(action)) {
                 try {
                     serveFile(requestedFilePath, response, request);
@@ -193,18 +191,24 @@ public class FileServlet extends HttpServlet {
         return (contentType != null) ? contentType : "application/octet-stream";
     }
 
-    private void deleteFile(String requestedFilePath) {
+    private void deleteFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) {
         File file = new File(requestedFilePath);
         if (file.exists() && file.isFile()) {
             file.delete();
         }
+        try {
+            showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+        } catch (ServletException ex) {}
     }
 
-    private void deleteFolder(String requestedFilePath) {
+    private void deleteFolder(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) {
         File folder = new File(requestedFilePath);
         if (folder.isDirectory() && folder.exists()) {
             folder.delete();
         }
+        try {
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+        }catch (ServletException ex) {}
     }
 
     private String getSubmittedFileName(Part part) {
