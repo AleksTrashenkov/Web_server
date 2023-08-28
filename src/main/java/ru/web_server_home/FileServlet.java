@@ -223,7 +223,7 @@ public class FileServlet extends HttpServlet {
             String fullPath;
             Random rnd = new Random();
             int number = rnd.nextInt(1000) + 1;
-            if (ipTablesClientsFiles.get(request.getRemoteAddr()).endsWith(newFolderName)) {
+            if (ipTablesClientsFiles.get(request.getRemoteAddr()).endsWith(newFolderName) || new File(ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName).exists()) {
                 fullPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName+"("+number+")";
             } else {
                 fullPath  = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
