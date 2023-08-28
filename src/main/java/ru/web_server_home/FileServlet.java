@@ -221,7 +221,14 @@ public class FileServlet extends HttpServlet {
         String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
         String newFolderName = request.getParameter("newFolderNameCreate");
         if (currentPath != null && newFolderName != null && !newFolderName.isEmpty()) {
-            String fullPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
+            String fullPath;
+            Random rnd = new Random();
+            int number = rnd.nextInt(1000) + 1;
+            if (ipTablesClientsFiles.get(request.getRemoteAddr()).endsWith(newFolderName)) {
+                fullPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName+"("+number+")";
+            } else {
+                fullPath  = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFolderName;
+            }
             File newFolder = new File(fullPath);
             if (!newFolder.exists()) {
                 newFolder.mkdirs();
@@ -234,7 +241,14 @@ public class FileServlet extends HttpServlet {
         String newFileName = request.getParameter("newFileName");
 
         String oldPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + oldFileName;
-        String newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFileName;
+        String newPath;
+        Random rnd = new Random();
+        int number = rnd.nextInt(1000) + 1;
+        if (ipTablesClientsFiles.get(request.getRemoteAddr()).endsWith(newFileName)) {
+            newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFileName+"("+number+")";
+        } else {
+            newPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + "/" + newFileName;
+        }
         File oldFile = new File(oldPath);
         File newFile = new File(newPath);
 
@@ -259,8 +273,10 @@ public class FileServlet extends HttpServlet {
                 String fileName = getSubmittedFileName(filePart);
 
                 String filePath;
+                Random rnd = new Random();
+                int number = rnd.nextInt(1000) + 1;
                 if (new File(ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName).exists()) {
-                    filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName+"(1)";
+                    filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName+"("+number+")";
                 } else {
                     filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + File.separator + fileName;
                 }
