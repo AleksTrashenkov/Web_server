@@ -408,7 +408,7 @@
             <span class="file-actions">
                 <!-- Действия с файлом -->
                 <a class="file-link" href="javascript:void(0);" onclick="showRenameDialog('${file.name}')">Переименовать</a>
-                <a class="file-link" href="<c:url value='/del/${file.name}'><c:param name='action' value='delete' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">Удалить</a>
+                <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='delete' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">Удалить</a>
             </span>
         </li>
     </c:forEach>
