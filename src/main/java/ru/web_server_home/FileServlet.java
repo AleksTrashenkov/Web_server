@@ -31,26 +31,31 @@ public class FileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ServletException {
         String requestedFilePath = URLDecoder.decode((request.getPathInfo() != null ? request.getPathInfo() : ""), "UTF-8");
         if (requestedFilePath == null || requestedFilePath.equals("/")) {
-                showFolderContents(request, response, requestedFilePath);
-            } else {
-                String action = request.getParameter("action");
-                if ("download".equals(action)) {
+            showFolderContents(request, response, requestedFilePath);
+        } else {
+            String action = request.getParameter("action");
+            switch (action) {
+                case "download":
                     showFolderContentsRUSPath(request, response, requestedFilePath);
-                } else if ("delete".equals(action)) {
+                    break;
+                case "delete":
                     if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                         String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
                         deleteFolder(folderPath);
-                            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud",""));
+                        showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                     } else {
                         String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
                         deleteFile(locPath);
                         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                     }
-                } else if ("view".equals(action)) {
+                    break;
+                case "view":
                     try {
                         serveFile(requestedFilePath, response, request);
-                    } catch (IOException es) {}
-                }  else {
+                    } catch (IOException es) {
+                    }
+                    break;
+                default:
                     if (requestedFilePath.endsWith("/")) {
                         showFolderContentsRUSPath(request, response, requestedFilePath);
                     } else {
@@ -60,9 +65,10 @@ public class FileServlet extends HttpServlet {
                         } catch (IOException e) {
                         }
                     }
-                }
+                    break;
             }
         }
+    }
 
     public static Multimap<String, String> getStructure(String directory) {
         scanDirectory(new File(directory), "");
