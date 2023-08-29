@@ -161,13 +161,7 @@ public class FileServlet extends HttpServlet {
 
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
-                    //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                    int currentPage;
-                    if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
-                        currentPage = 1;
-                    } else {
-                        currentPage = cashPage.get(request.getRemoteAddr());
-                    }
+                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
                     cashPage.put(request.getRemoteAddr(), currentPage);
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
@@ -191,6 +185,47 @@ public class FileServlet extends HttpServlet {
                 serveFile(requestedFilePath, response, request);
             }
         } catch (IOException ez) {
+            // Обработка ошибок
+        }
+    }
+    private void showFolderContentsCashPage(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
+        try {
+            String folderPath = UPLOAD_DIRECTORY + requestedFilePath;
+            ipTablesClients.put(request.getRemoteAddr(), folderPath);
+            ipTablesClientsFiles.put(request.getRemoteAddr(), folderPath);
+            File folder = new File(folderPath);
+
+            if (folder.exists() && folder.isDirectory()) {
+                List<File> filesList = Arrays.asList(folder.listFiles());
+
+                int itemsPerPage = 15;
+                String pageParam = request.getParameter("page");
+                //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                int currentPage;
+                if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
+                    currentPage = 1;
+                } else {
+                    currentPage = cashPage.get(request.getRemoteAddr());
+                }
+                int startIdx = (currentPage - 1) * itemsPerPage;
+                int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
+
+                List<File> itemsToShow = filesList.subList(startIdx, endIdx);
+
+                long creationTime = folder.lastModified();
+                Date creationDate = new Date(creationTime);
+
+                request.setAttribute("creationDate", creationDate);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("itemsPerPage", itemsPerPage);
+                request.setAttribute("files", itemsToShow);
+                request.setAttribute("filesList", filesList);
+                request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
+                request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
+            } else {
+                serveFile(requestedFilePath, response, request);
+            }
+        } catch (IOException e) {
             // Обработка ошибок
         }
     }
