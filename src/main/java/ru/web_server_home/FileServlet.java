@@ -126,7 +126,7 @@ public class FileServlet extends HttpServlet {
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
                     int currentPage;
-                    if (pageParam != null && !pageParam.isEmpty()) {
+                    if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
                         currentPage = 1;
                     } else {
                         currentPage = cashPage.get(request.getRemoteAddr());
