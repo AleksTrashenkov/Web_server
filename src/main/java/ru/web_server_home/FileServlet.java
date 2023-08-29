@@ -27,6 +27,7 @@ public class FileServlet extends HttpServlet {
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
+    public static HashMap<String, Integer> cashPage = new HashMap<>();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ServletException {
         String requestedFilePath = URLDecoder.decode((request.getPathInfo() != null ? request.getPathInfo() : ""), "UTF-8");
@@ -124,7 +125,13 @@ public class FileServlet extends HttpServlet {
 
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
-                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    int currentPage;
+                    if (pageParam != null && !pageParam.isEmpty()) {
+                        currentPage = 1;
+                    } else {
+                        currentPage = cashPage.get(request.getRemoteAddr());
+                    }
+                    //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
 
@@ -161,6 +168,7 @@ public class FileServlet extends HttpServlet {
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
                     int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    cashPage.put(request.getRemoteAddr(), currentPage);
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
 
