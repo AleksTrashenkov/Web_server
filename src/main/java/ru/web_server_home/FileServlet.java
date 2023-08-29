@@ -125,13 +125,7 @@ public class FileServlet extends HttpServlet {
 
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
-                    int currentPage;
-                    if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
-                        currentPage = 1;
-                    } else {
-                        currentPage = cashPage.get(request.getRemoteAddr());
-                    }
-                    //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
 
@@ -167,7 +161,13 @@ public class FileServlet extends HttpServlet {
 
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
-                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    int currentPage;
+                    if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
+                        currentPage = 1;
+                    } else {
+                        currentPage = cashPage.get(request.getRemoteAddr());
+                    }
                     cashPage.put(request.getRemoteAddr(), currentPage);
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
