@@ -240,7 +240,7 @@ public class FileServlet extends HttpServlet {
             file.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         } catch (ServletException ex) {}
     }
 
@@ -250,7 +250,7 @@ public class FileServlet extends HttpServlet {
             folder.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContentsCashPage(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         }catch (ServletException ex) {}
     }
 
@@ -280,7 +280,7 @@ public class FileServlet extends HttpServlet {
                 newFolder.mkdirs();
             }
         }
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+        showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
     }
     public void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String oldFileName = request.getParameter("oldFileName");
@@ -302,7 +302,7 @@ public class FileServlet extends HttpServlet {
             if (oldFile.renameTo(newFile)) {
                 //response.getWriter().write("success"); // Отправляем успешный ответ
                 try {
-                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+                    showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                 }catch (ServletException ex) {}
                 } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
@@ -330,7 +330,7 @@ public class FileServlet extends HttpServlet {
             }
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+        showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
     }
     }
 
