@@ -408,7 +408,7 @@
             <span class="file-actions">
                 <!-- Действия с файлом -->
                 <a class="file-link" href="javascript:void(0);" onclick="showRenameDialog('${file.name}')">Переименовать</a>
-                <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='delete' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">Удалить</a>
+                <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='delete' /></c:url>">Удалить</a>
             </span>
         </li>
     </c:forEach>
@@ -428,7 +428,7 @@
 
     <c:choose>
         <c:when test="${files.size() >= 15}">
-            <a href="<c:url value=''><c:param name='page' value='${currentPage + 1}' /><c:param name='currentPath' value='${currentPath}' /></c:url>">Следующая</a>
+            <a href="<c:url value=''><c:param name='page' value='${currentPage + 1}' /></c:url>">Следующая</a>
         </c:when>
         <c:otherwise>
             <span class="disabled">Следующая</span>

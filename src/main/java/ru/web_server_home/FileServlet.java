@@ -162,7 +162,6 @@ public class FileServlet extends HttpServlet {
                     int itemsPerPage = 15;
                     String pageParam = request.getParameter("page");
                     int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                    cashPage.put(request.getRemoteAddr(), currentPage);
                     int startIdx = (currentPage - 1) * itemsPerPage;
                     int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
 
@@ -188,47 +187,6 @@ public class FileServlet extends HttpServlet {
             // Обработка ошибок
         }
     }
-    private void showFolderContentsCashPage(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
-        try {
-            String folderPath = UPLOAD_DIRECTORY + requestedFilePath;
-            ipTablesClients.put(request.getRemoteAddr(), folderPath);
-            ipTablesClientsFiles.put(request.getRemoteAddr(), folderPath);
-            File folder = new File(folderPath);
-
-            if (folder.exists() && folder.isDirectory()) {
-                List<File> filesList = Arrays.asList(folder.listFiles());
-
-                int itemsPerPage = 15;
-                String pageParam = request.getParameter("page");
-                //int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                int currentPage;
-                if (pageParam != null && !pageParam.isEmpty() && cashPage.isEmpty()) {
-                    currentPage = 1;
-                } else {
-                    currentPage = cashPage.get(request.getRemoteAddr());
-                }
-                int startIdx = (currentPage - 1) * itemsPerPage;
-                int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
-
-                List<File> itemsToShow = filesList.subList(startIdx, endIdx);
-
-                long creationTime = folder.lastModified();
-                Date creationDate = new Date(creationTime);
-
-                request.setAttribute("creationDate", creationDate);
-                request.setAttribute("currentPage", currentPage);
-                request.setAttribute("itemsPerPage", itemsPerPage);
-                request.setAttribute("files", itemsToShow);
-                request.setAttribute("filesList", filesList);
-                request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
-                request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
-            } else {
-                serveFile(requestedFilePath, response, request);
-            }
-        } catch (IOException e) {
-            // Обработка ошибок
-        }
-    }
         private String getContentType(String fileName) {
         String contentType = getServletContext().getMimeType(fileName);
         return (contentType != null) ? contentType : "application/octet-stream";
@@ -240,7 +198,7 @@ public class FileServlet extends HttpServlet {
             file.delete();
         }
         try {
-            showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         } catch (ServletException ex) {}
     }
 
@@ -250,7 +208,7 @@ public class FileServlet extends HttpServlet {
             folder.delete();
         }
         try {
-            showFolderContentsCashPage(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         }catch (ServletException ex) {}
     }
 
@@ -280,7 +238,7 @@ public class FileServlet extends HttpServlet {
                 newFolder.mkdirs();
             }
         }
-        showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
     }
     public void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String oldFileName = request.getParameter("oldFileName");
@@ -302,7 +260,7 @@ public class FileServlet extends HttpServlet {
             if (oldFile.renameTo(newFile)) {
                 //response.getWriter().write("success"); // Отправляем успешный ответ
                 try {
-                    showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                 }catch (ServletException ex) {}
                 } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
@@ -330,7 +288,7 @@ public class FileServlet extends HttpServlet {
             }
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        showFolderContentsCashPage(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
     }
     }
 
