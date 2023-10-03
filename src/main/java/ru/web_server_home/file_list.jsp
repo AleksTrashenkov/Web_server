@@ -247,6 +247,31 @@
                .create-folder-form input[type="submit"]:hover {
                    background-color: #0056b3;
                }
+               .find-folder-file-form {
+                                  display: flex;
+                                  flex-direction: column;
+                                  gap: 10px;
+                              }
+
+                              .find-folder-file-form input[type="text"] {
+                                  width: 100%;
+                                  padding: 8px;
+                                  border: 1px solid #ccc;
+                                  border-radius: 4px;
+                              }
+
+                              .find-folder-file-form input[type="submit"] {
+                                  background-color: #007bff;
+                                  color: white;
+                                  border: none;
+                                  border-radius: 4px;
+                                  padding: 10px 20px;
+                                  cursor: pointer;
+                              }
+
+                              .find-folder-file-form input[type="submit"]:hover {
+                                  background-color: #0056b3;
+                              }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -334,6 +359,14 @@
             <input type="submit" value="Создать папку">
         </form>
     </div>
+    <div class="find-folder-file-form">
+            <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
+                <input type="text" name="findName" placeholder="Введите имя файла или папки для поиска" required> <!-- Изменено имя поля здесь -->
+                <input type="hidden" name="action" value="findFolderFile">
+                <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
+                <input type="submit" value="Поиск">
+            </form>
+        </div>
 <ul class="file-list">
     <c:forEach var="file" items="${files}">
         <li class="file-item">
