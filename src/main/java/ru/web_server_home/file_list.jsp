@@ -222,20 +222,32 @@
                     color: #ddd;
                     pointer-events: none;
                 }
-               .create-folder-form {
-                   display: flex;
-                   flex-direction: column;
-                   gap: 10px;
-               }
 
-               .create-folder-form input[type="text"] {
-                   width: 100%;
-                   padding: 8px;
-                   border: 1px solid #ccc;
+               .create-folder-button {
+                   background-color: #007bff; /* Синий цвет для кнопки "Создать папку" */
+                   color: white;
+                   border: none;
                    border-radius: 4px;
+                   padding: 10px 20px;
+                   cursor: pointer;
                }
 
-               .create-folder-form input[type="submit"] {
+               .create-folder-button:hover {
+                   background-color: #0056b3; /* Цвет при наведении на кнопку "Создать папку" */
+               }
+               .create-folder-form input[type="text"] {
+                                  width: 30%;
+                                  padding: 8px;
+                                  border: 1px solid #ccc;
+                                  border-radius: 4px;
+                              }
+               .find-folder-file-form input[type="text"] {
+                                                 width: 87%;
+                                                 padding: 8px;
+                                                 border: 1px solid #ccc;
+                                                 border-radius: 4px;
+                                             }
+               .search-button {
                    background-color: #007bff;
                    color: white;
                    border: none;
@@ -244,34 +256,9 @@
                    cursor: pointer;
                }
 
-               .create-folder-form input[type="submit"]:hover {
+               .search-button:hover {
                    background-color: #0056b3;
                }
-               .find-folder-file-form {
-                                  display: flex;
-                                  flex-direction: column;
-                                  gap: 10px;
-                              }
-
-                              .find-folder-file-form input[type="text"] {
-                                  width: 100%;
-                                  padding: 8px;
-                                  border: 1px solid #ccc;
-                                  border-radius: 4px;
-                              }
-
-                              .find-folder-file-form input[type="submit"] {
-                                  background-color: #007bff;
-                                  color: white;
-                                  border: none;
-                                  border-radius: 4px;
-                                  padding: 10px 20px;
-                                  cursor: pointer;
-                              }
-
-                              .find-folder-file-form input[type="submit"]:hover {
-                                  background-color: #0056b3;
-                              }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -326,6 +313,17 @@
                 }
             %>
             <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
+            <div class="find-folder-file-form">
+                         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
+                             <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
+                                 <input type="text" name="findName" placeholder="Поиск по облаку" required>
+                                 <button type="submit" class="search-button">Поиск</button> <!-- Кнопка поиска -->
+                             </div>
+                             <input type="hidden" name="action" value="findFolderFile">
+                             <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
+                         </form>
+                     </div>
+                     &nbsp;
 <form class="upload-form" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/">
     <input type="file" name="files" multiple="multiple">
     <input type="hidden" name="action" value="loader">
@@ -350,23 +348,17 @@
             </c:choose>
         </c:forEach>
     </div>
-     &nbsp;
+         &nbsp;
     <div class="create-folder-form">
         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
-            <input type="text" name="newFolderNameCreate" placeholder="Имя новой папки" required> <!-- Изменено имя поля здесь -->
+            <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
+                <input type="text" name="newFolderNameCreate" placeholder="Имя новой папки" required>
+                <button type="submit" class="create-folder-button">Создать папку</button> <!-- Кнопка "Создать папку" -->
+            </div>
             <input type="hidden" name="action" value="createFolder">
             <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
-            <input type="submit" value="Создать папку">
         </form>
     </div>
-    <div class="find-folder-file-form">
-            <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
-                <input type="text" name="findName" placeholder="Введите имя файла или папки для поиска" required> <!-- Изменено имя поля здесь -->
-                <input type="hidden" name="action" value="findFolderFile">
-                <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
-                <input type="submit" value="Поиск">
-            </form>
-        </div>
 <ul class="file-list">
     <c:forEach var="file" items="${files}">
         <li class="file-item">
