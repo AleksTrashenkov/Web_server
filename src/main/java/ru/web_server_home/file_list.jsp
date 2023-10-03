@@ -312,7 +312,6 @@
                     }
                 }
             %>
-            <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
             <div class="find-folder-file-form">
                          <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
                              <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
@@ -348,7 +347,7 @@
             </c:choose>
         </c:forEach>
     </div>
-         &nbsp;
+    <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
     <div class="create-folder-form">
         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
             <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
