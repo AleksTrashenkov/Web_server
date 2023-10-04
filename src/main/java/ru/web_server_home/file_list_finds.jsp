@@ -306,3 +306,49 @@
 </div>
 </body>
 </html>
+<%!
+    public long getFreeDiskSpace() {
+        String uploadPath = "F:/";
+        File disk = new File(uploadPath);
+        long freeSpaceInBytes = disk.getFreeSpace();
+        long freeSpaceInGB = freeSpaceInBytes / (1024 * 1024 * 1024);
+        return freeSpaceInGB;
+    }
+
+    public long getTotalDiskSpace() {
+        String uploadPath = "F:/";
+        File disk = new File(uploadPath);
+        long totalSpaceInBytes = disk.getTotalSpace();
+        long totalSpaceInGB = totalSpaceInBytes / (1024 * 1024 * 1024);
+        return totalSpaceInGB;
+    }
+public List<Map<String, String>> generateBreadcrumb(String currentPath) {
+    List<Map<String, String>> breadcrumb = new ArrayList<>();
+    String[] pathSegments = currentPath.split("/");
+    boolean startGenerating = false; // Флаг для начала генерации хлебных крошек
+    String fullPath = "";
+
+    for (String segment : pathSegments) {
+        if (!segment.isEmpty()) {
+            fullPath += "/" + segment;
+
+            // Начать генерацию хлебных крошек, когда достигнут путь "cloud"
+            if (segment.equalsIgnoreCase("cloud")) {
+                startGenerating = true;
+                Map<String, String> crumb = new HashMap<>();
+            }
+
+            if (startGenerating) {
+                Map<String, String> crumb = new HashMap<>();
+                if (!segment.equals("cloud")){
+                crumb.put("name", segment);
+                crumb.put("path", fullPath);
+                breadcrumb.add(crumb);
+                }
+            }
+        }
+    }
+    return breadcrumb;
+}
+
+%>
