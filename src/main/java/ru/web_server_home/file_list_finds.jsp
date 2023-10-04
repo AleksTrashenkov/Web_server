@@ -234,7 +234,7 @@
                             <c:when test='${file.value.directory}'>fas fa-folder'</c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".jpg") or file.value.toString().toLowerCase().endsWith(".png") or file.value.toString().toLowerCase().endsWith(".jpeg")}'>fas fa-image'</c:when>
+                                    <c:when test='${file.value.toString().replace("F:/cloud", "").toLowerCase().endsWith(".jpg") or file.value.toString().replace("F:/cloud/", "").toLowerCase().endsWith(".png") or file.value.toString().replace("F:/cloud/", "").toLowerCase().endsWith(".jpeg")}'>fas fa-image'</c:when>
                                     <c:when test='${file.value.toString().toLowerCase().endsWith(".txt")}'>far fa-file-alt'</c:when>
                                     <c:when test='${file.value.toString().toLowerCase().endsWith(".pdf")}'>far fa-file-pdf'</c:when>
                                     <c:when test='${file.value.toString().toLowerCase().endsWith(".doc") or file.value.toString().toLowerCase().endsWith(".docx")}'>far fa-file-word'</c:when>
@@ -251,7 +251,7 @@
             <span class="file-preview">
                 <!-- Предпросмотр или иконка для файла или папки -->
                 <c:choose>
-                    <c:when test="${file.value.toString().toLowerCase().endsWith('.jpg') or file.value.toString().toLowerCase().endsWith('.png') or file.value.toString().toLowerCase().endsWith('.jpeg') or file.value.toString().toLowerCase().endsWith('.gif')}">
+                    <c:when test='${file.value.toString().toLowerCase().endsWith(".jpg") or file.value.toString().toLowerCase().endsWith(".png") or file.value.toString().toLowerCase().endsWith(".jpeg") or file.value.toString().toLowerCase().endsWith(".gif")}'>
                         <img class="file-image" src="<c:url value='/cloud/${file.value.toString()}'><c:param name='action' value='view' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>" alt="${file.value.toString()}" style="max-width: 100px; max-height: 100px;" />
                     </c:when>
 
