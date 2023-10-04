@@ -27,7 +27,7 @@ public class FileServlet extends HttpServlet {
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
-    public static HashMap<String, Integer> cashPage = new HashMap<>();
+    public static Multimap<String, String> structureCloudFind = ArrayListMultimap.create();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ServletException {
         String requestedFilePath = URLDecoder.decode((request.getPathInfo() != null ? request.getPathInfo() : ""), "UTF-8");
@@ -66,7 +66,7 @@ public class FileServlet extends HttpServlet {
         scanDirectory(new File(directory), "");
         return structureCloud;
     }
-    private static void scanDirectory(File dir, String parentPath) {
+    private static Multimap<String, String> scanDirectory(File dir, String parentPath) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
                 if (item.isDirectory()) {
@@ -77,6 +77,7 @@ public class FileServlet extends HttpServlet {
                 }*/
             }
         }
+        return structureCloud;
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -214,11 +215,24 @@ public class FileServlet extends HttpServlet {
             showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         }catch (ServletException ex) {}
     }
-    private void findFolderFile (HttpServletResponse response, HttpServletRequest request) {
-
+    private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
+        String wordFind = request.getParameter("findName");
+        scanDirectoryFind(new File(UPLOAD_DIRECTORY), wordFind);
+        request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
 
-
+    private static Multimap<String, String> scanDirectoryFind(File dir, String targetWord) {
+        if (dir.isDirectory()) {
+            for (File item : dir.listFiles()) {
+                String itemName = item.getName();
+                if (itemName.contains(targetWord)) {
+                    structureCloud.put(itemName, item.getAbsolutePath().replace("\\", "/"));
+                }
+                scanDirectory(item, targetWord);
+            }
+        }
+        return structureCloudFind;
+    }
 
     private String getSubmittedFileName(Part part) {
         for (String content : part.getHeader("content-disposition").split(";")) {

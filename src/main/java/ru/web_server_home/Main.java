@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         String word = "фото";
-        System.out.println(getStructure(directory, word));
+        System.out.println(scanDirectory(new File(directory), word));
 
         /*Random rnd = new Random();
         int number = rnd.nextInt(1000) + 1;
@@ -30,12 +30,7 @@ public class Main {
             System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
         }*/
     }
-    public static Multimap<String, String> getStructure(String directory, String targetWord) {
-        scanDirectory(new File(directory), targetWord);
-        return structureCloud;
-    }
-
-    private static void scanDirectory(File dir, String targetWord) {
+    private static Multimap<String, String> scanDirectory(File dir, String targetWord) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
                 //if (item.isDirectory()) {
@@ -52,5 +47,6 @@ public class Main {
                 }*/
             }
         }
+        return structureCloud;
     }
 }
