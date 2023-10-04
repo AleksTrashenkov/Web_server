@@ -217,7 +217,11 @@ public class FileServlet extends HttpServlet {
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         String wordFind = request.getParameter("findName");
-        scanDirectoryFind(new File(UPLOAD_DIRECTORY), wordFind);
+        Multimap<String, String> searchResults = scanDirectoryFind(new File(UPLOAD_DIRECTORY), wordFind);
+
+        // Сохраните результаты поиска в атрибуте запроса
+        request.setAttribute("searchResults", searchResults);
+        // Перенаправьте запрос на JSP-страницу
         request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
 

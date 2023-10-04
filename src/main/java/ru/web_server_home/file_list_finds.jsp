@@ -226,8 +226,8 @@
     </div>
     <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
 <ul class="file-list">
-    <c:forEach var="file" items="${files}">
-        <li class="file-item">
+    <c:forEach var="file" items="${searchResults}">
+            <li class="file-item">
             <span class="file-icon">
                 <!-- Иконка файла или папки -->
                 <i class="<c:choose>
