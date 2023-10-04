@@ -231,18 +231,18 @@
             <span class="file-icon">
                 <!-- Иконка файла или папки -->
                 <i class="<c:choose>
-                            <c:when test='${file.directory}'>fas fa-folder'</c:when>
+                            <c:when test='${file.value.directory}'>fas fa-folder'</c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".jpg") or file.name.toLowerCase().endsWith(".png") or file.name.toLowerCase().endsWith(".jpeg")}'>fas fa-image'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".txt")}'>far fa-file-alt'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".pdf")}'>far fa-file-pdf'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".doc") or file.name.toLowerCase().endsWith(".docx")}'>far fa-file-word'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".mp4") or file.name.toLowerCase().endsWith(".avi") or file.name.toLowerCase().endsWith(".mkv")}'>far fa-file-video'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".exe")}'>far fa-file-exe'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".jar")}'>far fa-file-code'</c:when>
-                                    <c:when test='${file.name.toLowerCase().endsWith(".heic")}'>far fa-file-image'</c:when>
-                                    <c:when test='${file.directory}'>fas fa-folder'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".jpg") or file.value.toString().toLowerCase().endsWith(".png") or file.value.toString().toLowerCase().endsWith(".jpeg")}'>fas fa-image'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".txt")}'>far fa-file-alt'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".pdf")}'>far fa-file-pdf'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".doc") or file.value.toString().toLowerCase().endsWith(".docx")}'>far fa-file-word'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".mp4") or file.value.toString().toLowerCase().endsWith(".avi") or file.value.toString().toLowerCase().endsWith(".mkv")}'>far fa-file-video'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".exe")}'>far fa-file-exe'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".jar")}'>far fa-file-code'</c:when>
+                                    <c:when test='${file.value.toString().toLowerCase().endsWith(".heic")}'>far fa-file-image'</c:when>
+                                    <c:when test='${file.value.directory}'>fas fa-folder'</c:when>
                                     <c:otherwise>far fa-file'</c:otherwise>
                                 </c:choose>
                             </c:otherwise>
@@ -251,35 +251,36 @@
             <span class="file-preview">
                 <!-- Предпросмотр или иконка для файла или папки -->
                 <c:choose>
-                    <c:when test="${file.name.toLowerCase().endsWith('.jpg') or file.name.toLowerCase().endsWith('.png') or file.name.toLowerCase().endsWith('.jpeg') or file.name.toLowerCase().endsWith('.gif')}">
-                        <img class="file-image" src="<c:url value='/cloud/${file.name}'><c:param name='action' value='view' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>" alt="${file.name}" style="max-width: 100px; max-height: 100px;" />
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.jpg') or file.value.toString().toLowerCase().endsWith('.png') or file.value.toString().toLowerCase().endsWith('.jpeg') or file.value.toString().toLowerCase().endsWith('.gif')}">
+                        <img class="file-image" src="<c:url value='/cloud/${file.value.toString()}'><c:param name='action' value='view' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>" alt="${file.value.toString()}" style="max-width: 100px; max-height: 100px;" />
                     </c:when>
-                    <c:when test="${file.directory}">
+
+                    <c:when test="${file.value.directory}">
                         <i class="fas fa-folder"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.txt')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.txt')}">
                         <i class="far fa-file-alt"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.pdf')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.pdf')}">
                         <i class="far fa-file-pdf"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.doc') or file.name.toLowerCase().endsWith('.docx')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.doc') or file.value.toString().toLowerCase().endsWith('.docx')}">
                         <i class="far fa-file-word"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.mp4') or file.name.toLowerCase().endsWith('.avi') or file.name.toLowerCase().endsWith('.mkv') or file.name.toLowerCase().endsWith('.mov') or file.name.toLowerCase().endsWith('.wmv')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.mp4') or file.value.toString().toLowerCase().endsWith('.avi') or file.value.toString().toLowerCase().endsWith('.mkv') or file.value.toString().toLowerCase().endsWith('.mov') or file.value.toString().toLowerCase().endsWith('.wmv')}">
                         <i class="far fa-file-video"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.rar') or file.name.toLowerCase().endsWith('.zip')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.rar') or file.value.toString().toLowerCase().endsWith('.zip')}">
                     <i class="far fa-file-archive"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.jar')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.jar')}">
                         <i class="far fa-file-code"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.heic')}">
+                    <c:when test="${file.value.toString().toLowerCase().endsWith('.heic')}">
                      <i class="far fa-file-image"></i>
                     </c:when>
                     <c:otherwise>
-                        <i class="far fa-file"></i>
+                        <i class="fas fa-file"></i>
                     </c:otherwise>
                 </c:choose>
             </span>
@@ -287,14 +288,13 @@
                 <!-- Имя файла -->
                 &nbsp;
                <c:choose>
-                    <c:when test="${file.directory}">
-                        <a class="file-link" href="<c:url value='/cloud/${file.name}/'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
+                    <c:when test="${file.value.directory}">
+                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}/'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.value.toString()}</a>
                     </c:when>
                     <c:otherwise>
-                        <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
+                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.value.toString()}</a>
                     </c:otherwise>
                 </c:choose>
-                <p style="font-size: 10px">Изменено: <%= request.getAttribute("creationDate") %></p>
             </span>
         </li>
     </c:forEach>
