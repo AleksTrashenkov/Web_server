@@ -91,6 +91,9 @@ public class FileServlet extends HttpServlet {
             case "loader" :
                 loader(request, response);
                 break;
+            case "findFolderFile" :
+                findFolderFile(response, request);
+                break;
         }
     }
     private void serveFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
@@ -211,6 +214,11 @@ public class FileServlet extends HttpServlet {
             showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
         }catch (ServletException ex) {}
     }
+    private void findFolderFile (HttpServletResponse response, HttpServletRequest request) {
+
+    }
+
+
 
     private String getSubmittedFileName(Part part) {
         for (String content : part.getHeader("content-disposition").split(";")) {
