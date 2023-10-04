@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         String word = "фото";
-        System.out.println(scanDirectory(new File(directory), word));
+        System.out.println(getStructureFind(directory, word));
 
         /*Random rnd = new Random();
         int number = rnd.nextInt(1000) + 1;
@@ -30,23 +30,19 @@ public class Main {
             System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
         }*/
     }
-    private static Multimap<String, String> scanDirectory(File dir, String targetWord) {
+    public static Multimap<String, String> getStructureFind(String directory, String word) {
+        scanDirectoryFind(new File(directory), word);
+        return structureCloud;
+    }
+    private static void scanDirectoryFind(File dir, String targetWord) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
-                //if (item.isDirectory()) {
                     String itemName = item.getName();
                     if (itemName.contains(targetWord)) {
                         structureCloud.put(itemName, item.getAbsolutePath().replace("\\", "/"));
                     }
-                    scanDirectory(item, targetWord);
-                /*} else {
-                    String itemName = item.getName();
-                    if (itemName.contains(targetWord)) {
-                        filesCloud.put(itemName, item.getAbsolutePath().replace("\\", "/"));
-                    }
-                }*/
+                scanDirectoryFind(item, targetWord);
             }
         }
-        return structureCloud;
     }
 }

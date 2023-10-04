@@ -295,7 +295,7 @@
                     </c:otherwise>
                 </c:choose>
                 <p style="font-size: 10px">Изменено: <%= request.getAttribute("creationDate") %></p>
-            </span>jjj
+            </span>
         </li>
     </c:forEach>
 </ul>

@@ -217,25 +217,42 @@ public class FileServlet extends HttpServlet {
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         String wordFind = request.getParameter("findName");
-        Multimap<String, String> searchResults = scanDirectoryFind(new File(UPLOAD_DIRECTORY), wordFind);
+        Multimap<String, String> searchResults = getStructureFind(UPLOAD_DIRECTORY, wordFind);
+        List<Map.Entry<String, String>> searchResultsList = new ArrayList<>(searchResults.entries());
+
+        try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
+        {
+            // запись всей строки
+            String text = wordFind+"\n "+searchResultsList;
+            writer.write(text);
+
+            writer.flush();
+        }
+        catch(IOException ex){
+
+            System.out.println(ex.getMessage());
+        }
 
         // Сохраните результаты поиска в атрибуте запроса
-        request.setAttribute("searchResults", searchResults);
+        request.setAttribute("searchResults", searchResultsList);
         // Перенаправьте запрос на JSP-страницу
         request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
 
-    private static Multimap<String, String> scanDirectoryFind(File dir, String targetWord) {
+    public static Multimap<String, String> getStructureFind(String directory, String wordFind) {
+        scanDirectoryFind(new File(directory), wordFind);
+        return structureCloud;
+    }
+    private static void scanDirectoryFind(File dir, String targetWord) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
                 String itemName = item.getName();
                 if (itemName.contains(targetWord)) {
                     structureCloud.put(itemName, item.getAbsolutePath().replace("\\", "/"));
                 }
-                scanDirectory(item, targetWord);
+                scanDirectoryFind(item, targetWord);
             }
         }
-        return structureCloudFind;
     }
 
     private String getSubmittedFileName(Part part) {
