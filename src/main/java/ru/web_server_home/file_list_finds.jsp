@@ -198,6 +198,24 @@
                     color: #ddd;
                     pointer-events: none;
                 }
+                .find-folder-file-form input[type="text"] {
+                                                                 width: 87%;
+                                                                 padding: 8px;
+                                                                 border: 1px solid #ccc;
+                                                                 border-radius: 4px;
+                                                             }
+                               .search-button {
+                                   background-color: #007bff;
+                                   color: white;
+                                   border: none;
+                                   border-radius: 4px;
+                                   padding: 10px 20px;
+                                   cursor: pointer;
+                               }
+
+                               .search-button:hover {
+                                   background-color: #0056b3;
+                               }
     </style>
 </head>
 <body>
@@ -225,7 +243,18 @@
 <a href="${pageContext.request.contextPath}/cloud/">Главная</a>
     </div>
     <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
-    <h2>Результаты поиска:</h2>
+<div class="find-folder-file-form">
+                         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
+                             <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
+                                 <input type="text" name="findName" placeholder="Поиск по облаку" required>
+                                 <button type="submit" class="search-button">Поиск</button> <!-- Кнопка поиска -->
+                             </div>
+                             <input type="hidden" name="action" value="findFolderFile">
+                             <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
+                         </form>
+                     </div>
+                     &nbsp;
+    <h3>Результаты поиска по "${wordFind}":</h3>
 <ul class="file-list">
     <c:forEach var="file" items="${searchResults}">
             <li class="file-item">
