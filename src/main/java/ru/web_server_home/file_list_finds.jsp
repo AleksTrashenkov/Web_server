@@ -225,7 +225,7 @@
 <a href="${pageContext.request.contextPath}/cloud/">Главная</a>
     </div>
     <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
-    <h2>Результаты поиска:</h2>
+    <h2>Результаты поиска по "${wordFind}":</h2>
 <ul class="file-list">
     <c:forEach var="file" items="${searchResults}">
             <li class="file-item">

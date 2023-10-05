@@ -225,6 +225,7 @@ public class FileServlet extends HttpServlet {
 
         // Сохраните результаты поиска в атрибуте запроса
         request.setAttribute("searchResults", searchResultsList);
+        request.setAttribute("wordFind", wordFind);
         // Перенаправьте запрос на JSP-страницу
         request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
