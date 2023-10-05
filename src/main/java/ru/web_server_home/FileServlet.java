@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @WebServlet("/cloud")
-@MultipartConfig(maxFileSize = 1024 * 1024 * 10000, maxRequestSize = 1024 * 1024 * 10000)
+@MultipartConfig(maxFileSize = 1024 * 1024 * 2000, maxRequestSize = 1024 * 1024 * 2000)
 public class FileServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String UPLOAD_DIRECTORY = "F:/cloud";
