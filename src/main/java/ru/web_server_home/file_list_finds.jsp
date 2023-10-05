@@ -225,6 +225,7 @@
 <a href="${pageContext.request.contextPath}/cloud/">Главная</a>
     </div>
     <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
+    <h2>Результаты поиска:</h2>
 <ul class="file-list">
     <c:forEach var="file" items="${searchResults}">
             <li class="file-item">
@@ -289,10 +290,10 @@
                 &nbsp;
                <c:choose>
                     <c:when test="${file.value.directory}">
-                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}/'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.value.toString()}</a>
+                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}/'><c:param name='action' value='download' /></c:url>">${file.value.toString()}</a>
                     </c:when>
                     <c:otherwise>
-                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.value.toString()}</a>
+                        <a class="file-link" href="<c:url value='/cloud/${file.value.toString()}'><c:param name='action' value='download' /></c:url>">${file.value.toString()}</a>
                     </c:otherwise>
                 </c:choose>
             </span>

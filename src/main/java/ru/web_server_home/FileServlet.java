@@ -123,6 +123,18 @@ public class FileServlet extends HttpServlet {
             ipTablesClients.put(request.getRemoteAddr(), folderPath);
             ipTablesClientsFiles.put(request.getRemoteAddr(), folderPath);
             File folder = new File(folderPath);
+            try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
+            {
+                // запись всей строки
+                String text = folderPath;
+                writer.write(text);
+
+                writer.flush();
+            }
+            catch(IOException ex){
+
+                System.out.println(ex.getMessage());
+            }
 
             if (folder.exists() && folder.isDirectory()) {
                 List<File> filesList = Arrays.asList(folder.listFiles());
