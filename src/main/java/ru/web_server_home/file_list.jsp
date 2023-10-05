@@ -441,7 +441,7 @@
 <div class="pagination">
     <c:choose>
         <c:when test="${currentPage > 1}">
-            <a href="<c:url value=''><c:param name='page' value='${currentPage - 1}' /><c:param name='currentPath' value='${currentPath}' /></c:url>">Предыдущая</a>
+            <a href="<c:url value=''><c:param name='page' value='${currentPage - 1}' /><c:param name='currentPath' value='${currentPath}' /><c:param name='action' value='download' /></c:url>">Предыдущая</a>
         </c:when>
         <c:otherwise>
             <span class="disabled">Предыдущая</span>
@@ -452,7 +452,7 @@
 
     <c:choose>
         <c:when test="${files.size() >= 15}">
-            <a href="<c:url value=''><c:param name='page' value='${currentPage + 1}' /></c:url>">Следующая</a>
+            <a href="<c:url value=''><c:param name='page' value='${currentPage + 1}' /><c:param name='action' value='download' /></c:url>">Следующая</a>
         </c:when>
         <c:otherwise>
             <span class="disabled">Следующая</span>
