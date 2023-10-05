@@ -27,7 +27,7 @@ public class FileServlet extends HttpServlet {
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
-    public static Multimap<String, File> structureCloudFind = ArrayListMultimap.create();
+    public static Multimap<String, String> structureCloudFind = ArrayListMultimap.create();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ServletException {
         String requestedFilePath = URLDecoder.decode((request.getPathInfo() != null ? request.getPathInfo() : ""), "UTF-8");
@@ -41,10 +41,10 @@ public class FileServlet extends HttpServlet {
                 if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                     String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClients.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
                     deleteFolder(folderPath, response, request);
-                } else {
+                    } else {
                     String locPath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
                     deleteFile(locPath, response, request);
-                }
+                    }
             } else if ("view".equals(action)) {
                 try {
                     serveFile(requestedFilePath, response, request);
@@ -98,25 +98,25 @@ public class FileServlet extends HttpServlet {
         }
     }
     private void serveFile(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
-        String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
+       String filePath = ipTablesClientsFiles.get(request.getRemoteAddr()) + requestedFilePath;
         File file = new File(filePath);
 
         if (file.exists() && file.isFile()) {
-            response.setContentType(getContentType(filePath));
-            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+                response.setContentType(getContentType(filePath));
+                response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
 
-            try (InputStream inputStream = new FileInputStream(file);
-                 OutputStream outputStream = response.getOutputStream()) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
+                try (InputStream inputStream = new FileInputStream(file);
+                     OutputStream outputStream = response.getOutputStream()) {
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
                 }
-            }
-        } else {
+            } else {
             showFolderContents(request, response, requestedFilePath);
+            }
         }
-    }
     private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
         try {
             String folderPath = UPLOAD_DIRECTORY + requestedFilePath;
@@ -125,29 +125,29 @@ public class FileServlet extends HttpServlet {
             File folder = new File(folderPath);
 
             if (folder.exists() && folder.isDirectory()) {
-                List<File> filesList = Arrays.asList(folder.listFiles());
+                    List<File> filesList = Arrays.asList(folder.listFiles());
 
-                int itemsPerPage = 15;
-                String pageParam = request.getParameter("page");
-                int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                int startIdx = (currentPage - 1) * itemsPerPage;
-                int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
+                    int itemsPerPage = 15;
+                    String pageParam = request.getParameter("page");
+                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+                    int startIdx = (currentPage - 1) * itemsPerPage;
+                    int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
 
-                List<File> itemsToShow = filesList.subList(startIdx, endIdx);
+                    List<File> itemsToShow = filesList.subList(startIdx, endIdx);
 
-                long creationTime = folder.lastModified();
-                Date creationDate = new Date(creationTime);
+                    long creationTime = folder.lastModified();
+                    Date creationDate = new Date(creationTime);
 
-                request.setAttribute("creationDate", creationDate);
-                request.setAttribute("currentPage", currentPage);
-                request.setAttribute("itemsPerPage", itemsPerPage);
-                request.setAttribute("files", itemsToShow);
-                request.setAttribute("filesList", filesList);
-                request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
-                request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
-            } else {
-                serveFile(requestedFilePath, response, request);
-            }
+                    request.setAttribute("creationDate", creationDate);
+                    request.setAttribute("currentPage", currentPage);
+                    request.setAttribute("itemsPerPage", itemsPerPage);
+                    request.setAttribute("files", itemsToShow);
+                    request.setAttribute("filesList", filesList);
+                    request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
+                    request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
+                } else {
+                    serveFile(requestedFilePath, response, request);
+                }
         } catch (IOException e) {
             // Обработка ошибок
         }
@@ -191,7 +191,7 @@ public class FileServlet extends HttpServlet {
             // Обработка ошибок
         }
     }
-    private String getContentType(String fileName) {
+        private String getContentType(String fileName) {
         String contentType = getServletContext().getMimeType(fileName);
         return (contentType != null) ? contentType : "application/octet-stream";
     }
@@ -216,12 +216,22 @@ public class FileServlet extends HttpServlet {
         }catch (ServletException ex) {}
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
-        if (!structureCloudFind.isEmpty()){
-            structureCloudFind.clear();
-        }
         String wordFind = request.getParameter("findName");
-        Multimap<String, File> searchResults = getStructureFind(UPLOAD_DIRECTORY, wordFind);
-        List<Map.Entry<String, File>> searchResultsList = new ArrayList<>(searchResults.entries());
+        Multimap<String, String> searchResults = getStructureFind(UPLOAD_DIRECTORY, wordFind);
+        List<Map.Entry<String, String>> searchResultsList = new ArrayList<>(searchResults.entries());
+
+        try(FileWriter writer = new FileWriter(UPLOAD_DIRECTORY+"/notes3.txt", false))
+        {
+            // запись всей строки
+            String text = wordFind+"\n "+searchResultsList;
+            writer.write(text);
+
+            writer.flush();
+        }
+        catch(IOException ex){
+
+            System.out.println(ex.getMessage());
+        }
 
         // Сохраните результаты поиска в атрибуте запроса
         request.setAttribute("searchResults", searchResultsList);
@@ -229,16 +239,16 @@ public class FileServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
 
-    public static Multimap<String, File> getStructureFind(String directory, String wordFind) {
+    public static Multimap<String, String> getStructureFind(String directory, String wordFind) {
         scanDirectoryFind(new File(directory), wordFind);
-        return structureCloudFind;
+        return structureCloud;
     }
     private static void scanDirectoryFind(File dir, String targetWord) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
                 String itemName = item.getName();
                 if (itemName.contains(targetWord)) {
-                    structureCloudFind.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace("F:/cloud/", "")));
+                    structureCloud.put(itemName, item.getAbsolutePath().replace("\\", "/"));
                 }
                 scanDirectoryFind(item, targetWord);
             }
@@ -295,7 +305,7 @@ public class FileServlet extends HttpServlet {
                 try {
                     showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
                 }catch (ServletException ex) {}
-            } else {
+                } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
             }
         } else {
@@ -323,5 +333,5 @@ public class FileServlet extends HttpServlet {
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
     }
-}
+    }
 
