@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Main {
     //public static String directory = "/Users/trashenkov_aleks/Downloads/";
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String word = "фото";
         System.out.println(getStructureFind(directory, word));
 
@@ -30,11 +31,11 @@ public class Main {
             System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
         }*/
     }
-    public static Multimap<String, String> getStructureFind(String directory, String word) {
+    public static Multimap<String, String> getStructureFind(String directory, String word) throws IOException {
         scanDirectoryFind(new File(directory), word);
         return structureCloud;
     }
-    private static void scanDirectoryFind(File dir, String targetWord) {
+    private static void scanDirectoryFind(File dir, String targetWord) throws IOException {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
                     String itemName = item.getName();
