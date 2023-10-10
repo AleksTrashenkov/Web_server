@@ -338,7 +338,7 @@
 </html>
 <%!
     public long getFreeDiskSpace() {
-        String uploadPath = "F:/";
+        String uploadPath = "D:/";
         File disk = new File(uploadPath);
         long freeSpaceInBytes = disk.getFreeSpace();
         long freeSpaceInGB = freeSpaceInBytes / (1024 * 1024 * 1024);
@@ -346,7 +346,7 @@
     }
 
     public long getTotalDiskSpace() {
-        String uploadPath = "F:/";
+        String uploadPath = "D:/";
         File disk = new File(uploadPath);
         long totalSpaceInBytes = disk.getTotalSpace();
         long totalSpaceInGB = totalSpaceInBytes / (1024 * 1024 * 1024);

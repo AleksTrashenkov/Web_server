@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @MultipartConfig(maxFileSize = 1024 * 1024 * 2000, maxRequestSize = 1024 * 1024 * 2000)
 public class FileServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final String UPLOAD_DIRECTORY = "F:/cloud";
+    private static final String UPLOAD_DIRECTORY = "D:/cloud";
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
@@ -114,7 +114,14 @@ public class FileServlet extends HttpServlet {
                 }
             }
         } else {
-            showFolderContents(request, response, requestedFilePath);
+            // Если папка не существует или не является директорией, то проверьте, существует ли файл и предпросмотрите его, если он существует.
+            if (file.exists() && file.isDirectory()) {
+                showFolderContents(request, response, requestedFilePath);
+            } else {
+                // Если и файл не существует, и папка не существует, то выведите сообщение об ошибке.
+               // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
+                //serveFile(requestedFilePath, response, request);
+            }
         }
     }
     private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
@@ -143,10 +150,17 @@ public class FileServlet extends HttpServlet {
                 request.setAttribute("itemsPerPage", itemsPerPage);
                 request.setAttribute("files", itemsToShow);
                 request.setAttribute("filesList", filesList);
-                request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
+                request.setAttribute("currentPath", folderPath.replace("D:", "home_cloud"));
                 request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
             } else {
-                serveFile(requestedFilePath, response, request);
+                // Если папка не существует или не является директорией, то проверьте, существует ли файл и предпросмотрите его, если он существует.
+                File file = new File(UPLOAD_DIRECTORY + requestedFilePath);
+                if (file.exists() && file.isFile()) {
+                    serveFile(requestedFilePath, response, request);
+                } else {
+                    // Если и файл не существует, и папка не существует, то выведите сообщение об ошибке.
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
+                }
             }
         } catch (IOException e) {
             // Обработка ошибок
@@ -181,11 +195,15 @@ public class FileServlet extends HttpServlet {
                     request.setAttribute("endIdx", endIdx);
                     request.setAttribute("files", itemsToShow);
                     request.setAttribute("filesList", filesList);
-                    request.setAttribute("currentPath", folderPath.replace("F:", "home_cloud"));
+                    request.setAttribute("currentPath", folderPath.replace("D:", "home_cloud"));
                     request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
                 } else {showFolderContents(request, response, requestedFilePath);}
             } else {
-                serveFile(requestedFilePath, response, request);
+                if (new File(ipTablesClientsFiles.get(request.getRemoteAddr())+requestedFilePath).isFile()) {
+                    serveFile(requestedFilePath, response, request);
+                } else {
+                    showFolderContents(request, response, requestedFilePath);
+                }
             }
         } catch (IOException ez) {
             // Обработка ошибок
@@ -202,7 +220,7 @@ public class FileServlet extends HttpServlet {
             file.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
         } catch (ServletException ex) {}
     }
 
@@ -212,7 +230,7 @@ public class FileServlet extends HttpServlet {
             folder.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
         }catch (ServletException ex) {}
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
@@ -237,9 +255,9 @@ public class FileServlet extends HttpServlet {
     private static void scanDirectoryFind(File dir, String targetWord) {
         if (dir.isDirectory()) {
             for (File item : dir.listFiles()) {
-                String itemName = item.getName();
-                if (itemName.contains(targetWord)) {
-                    structureCloudFind.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace("F:/cloud/", "")));
+                String itemName = item.getName().toLowerCase();
+                if (itemName.contains(targetWord.toLowerCase())) {
+                    structureCloudFind.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace("D:/cloud/", "")));
                 }
                 scanDirectoryFind(item, targetWord);
             }
@@ -272,7 +290,7 @@ public class FileServlet extends HttpServlet {
                 newFolder.mkdirs();
             }
         }
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
     }
     public void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String oldFileName = request.getParameter("oldFileName");
@@ -294,7 +312,7 @@ public class FileServlet extends HttpServlet {
             if (oldFile.renameTo(newFile)) {
                 //response.getWriter().write("success"); // Отправляем успешный ответ
                 try {
-                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud", ""));
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
                 }catch (ServletException ex) {}
             } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
@@ -322,7 +340,7 @@ public class FileServlet extends HttpServlet {
             }
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("F:/cloud",""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
     }
 }
 

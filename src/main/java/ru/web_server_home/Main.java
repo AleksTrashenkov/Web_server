@@ -13,25 +13,37 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class Main {
-    public static String directory = "F:/cloud";
+    public static String directory = "D:/cloud";
     //public static String directory = "/Users/trashenkov_aleks/Downloads/";
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
 
     public static void main(String[] args) throws IOException {
-        String word = "фото";
-        System.out.println(getStructureFind(directory, word));
+/*        String word = "фото";
+        System.out.println(getStructureFind(directory, word));*/
+        String programPath = "C:\\Program Files\\SQLite Expert\\Personal 5\\SQLiteExpertPers64.exe"; // Укажите полный путь к программе
 
-        /*Random rnd = new Random();
-        int number = rnd.nextInt(1000) + 1;
-        System.out.println("Random number: " + number);
-        if (getStructure(directory).get("Документы").isEmpty()) {
-            System.out.println("null");
-        } else {
-            System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
-            System.out.println(getStructure(directory).get("Документы").stream().filter(e -> e.startsWith("F:\\cloud\\FILES KATERINA\\Документы")).findFirst().toString().replace("Optional[", "").replace("]", ""));
-        }*/
+        try {
+            // Создаем объект ProcessBuilder с указанным путем к программе
+            ProcessBuilder processBuilder = new ProcessBuilder(programPath);
+
+            // Запускаем программу
+            Process process = processBuilder.start();
+            // Ждем некоторое время (например, 5 секунд)
+            Thread.sleep(5000);
+
+            // Завершаем выполнение программы
+            process.destroy();
+
+            // Ожидаем завершения выполнения программы (необязательно)
+            int exitCode = process.waitFor();
+
+            System.out.println("Программа завершила выполнение с кодом: " + exitCode);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
-    public static Multimap<String, String> getStructureFind(String directory, String word) throws IOException {
+/*    public static Multimap<String, String> getStructureFind(String directory, String word) throws IOException {
         scanDirectoryFind(new File(directory), word);
         return structureCloud;
     }
@@ -45,5 +57,5 @@ public class Main {
                 scanDirectoryFind(item, targetWord);
             }
         }
-    }
+    }*/
 }
