@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File List</title>
+    <title>Облако</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -347,7 +347,7 @@
             </c:choose>
         </c:forEach>
     </div>
-    <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
+   <p>Свободное место на диске: <%= freeSpace %> ГБ из <%= totalSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
     <div class="create-folder-form">
         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
             <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
@@ -408,7 +408,7 @@
                     <c:when test="${file.name.toLowerCase().endsWith('.jar')}">
                         <i class="far fa-file-code"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.heic')}">
+                     <c:when test="${file.name.toLowerCase().endsWith('.heic')}">
                      <i class="far fa-file-image"></i>
                     </c:when>
                     <c:otherwise>

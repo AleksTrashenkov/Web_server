@@ -3,9 +3,14 @@ package ru.web_server_home;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.event.IIOWriteWarningListener;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,9 +23,7 @@ public class Main {
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
 
     public static void main(String[] args) throws IOException {
-/*        String word = "фото";
-        System.out.println(getStructureFind(directory, word));*/
-        String programPath = "C:\\Program Files\\SQLite Expert\\Personal 5\\SQLiteExpertPers64.exe"; // Укажите полный путь к программе
+/*        String programPath = "C:\\Program Files\\SQLite Expert\\Personal 5\\SQLiteExpertPers64.exe"; // Укажите полный путь к программе
 
         try {
             // Создаем объект ProcessBuilder с указанным путем к программе
@@ -40,9 +43,9 @@ public class Main {
             System.out.println("Программа завершила выполнение с кодом: " + exitCode);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
-
+        }*/
     }
+
 /*    public static Multimap<String, String> getStructureFind(String directory, String word) throws IOException {
         scanDirectoryFind(new File(directory), word);
         return structureCloud;
