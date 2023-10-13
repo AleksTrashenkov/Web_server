@@ -350,7 +350,18 @@ public class FileServlet extends HttpServlet {
             if (exitCode == 0) {
                 System.out.println("Конвертация завершена успешно.");
             } else {
-                System.err.println("Произошла ошибка при конвертации.");
+                try(FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0_mini-server\\webapps\\home_cloud\\errorsConvertation.txt", false))
+                {
+                    // запись всей строки
+                    String text = "Oшибка конвертации файла: " + heicPath;
+                    writer.write(text);
+
+                    writer.flush();
+                }
+                catch(IOException ex){
+
+                    System.out.println(ex.getMessage());
+                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
