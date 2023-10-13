@@ -23,8 +23,9 @@ public class FileServlet extends HttpServlet {
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
     public static Multimap<String, File> structureCloudFind = ArrayListMultimap.create();
+    public static HashMap<String, String> ipTalesNameFolder = new HashMap<>();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String requestedFilePath = URLDecoder.decode((request.getPathInfo() != null ? request.getPathInfo() : ""), "UTF-8");
         if (requestedFilePath == null || requestedFilePath.equals("/")) {
             showFolderContents(request, response, requestedFilePath);
@@ -91,7 +92,7 @@ public class FileServlet extends HttpServlet {
                 findFolderFile(response, request);
                 break;
             case "convert" :
-                convertHEICtoJPEG(request, response, ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName"), ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName").replace(".heic","(изм. heic).jpg"));
+                convertHEICtoJPEG(request, response, ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName"), ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName").replace(".HEIC","(изм. heic).jpg"));
                 //response.sendError(HttpServletResponse.SC_NOT_FOUND, "Здесь скоро будет обработчик конвертации "+ request.getParameter("fileName"));
                 break;
         }
@@ -123,7 +124,7 @@ public class FileServlet extends HttpServlet {
             }
         }
     }
-    private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
+    private void showFolderContents(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException, IOException {
         try {
             String folderPath = UPLOAD_DIRECTORY + requestedFilePath;
             ipTablesClients.put(request.getRemoteAddr(), folderPath);
@@ -163,14 +164,17 @@ public class FileServlet extends HttpServlet {
             }
         } catch (IOException e) {
             // Обработка ошибок
+        }catch (IllegalArgumentException e) {
+            showFolderContentsRUSPath(request, response, ipTalesNameFolder.get(request.getRemoteAddr()));
         }
     }
-    private void showFolderContentsRUSPath(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException {
+    private void showFolderContentsRUSPath(HttpServletRequest request, HttpServletResponse response, String requestedFilePath) throws ServletException, IOException {
         try {
             if (!getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).isEmpty()) {
                 String folderPath = getStructure(UPLOAD_DIRECTORY).get(requestedFilePath.replace("/", "")).stream().filter(e -> e.startsWith(ipTablesClientsFiles.get(request.getRemoteAddr()))).findFirst().toString().replace("Optional[", "").replace("]", "");
                 ipTablesClients.put(request.getRemoteAddr(), folderPath.replace(requestedFilePath.replace("/",""), ""));
                 ipTablesClientsFiles.put(request.getRemoteAddr(), folderPath);
+                ipTalesNameFolder.put(request.getRemoteAddr(), requestedFilePath);
                 File folder = new File(folderPath);
 
                 if (folder.exists() && folder.isDirectory()) {
@@ -206,6 +210,8 @@ public class FileServlet extends HttpServlet {
             }
         } catch (IOException ez) {
             // Обработка ошибок
+        }catch (IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Еще ошибочка нах");
         }
     }
     private String getContentType(String fileName) {
@@ -220,7 +226,7 @@ public class FileServlet extends HttpServlet {
         }
         try {
             showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
-        } catch (ServletException ex) {}
+        } catch (ServletException | IOException ex) {}
     }
 
     private void deleteFolder(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) {
@@ -230,7 +236,7 @@ public class FileServlet extends HttpServlet {
         }
         try {
             showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
-        }catch (ServletException ex) {}
+        }catch (ServletException | IOException ex) {}
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         if (!structureCloudFind.isEmpty()){
@@ -271,7 +277,7 @@ public class FileServlet extends HttpServlet {
         }
         return null;
     }
-    public void createFolder(HttpServletResponse response, HttpServletRequest request) throws ServletException {
+    public void createFolder(HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         //String currentPath = request.getParameter("currentPath");
         String currentPath = ipTablesClientsFiles.get(request.getRemoteAddr());
         String newFolderName = request.getParameter("newFolderNameCreate");
@@ -341,7 +347,7 @@ public class FileServlet extends HttpServlet {
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
     }
-    public void convertHEICtoJPEG(HttpServletRequest request, HttpServletResponse response, String heicPath, String jpegPath) throws ServletException {
+    public void convertHEICtoJPEG(HttpServletRequest request, HttpServletResponse response, String heicPath, String jpegPath) throws ServletException, IOException {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\convert.exe", heicPath, jpegPath);
             Process process = processBuilder.start();
@@ -368,7 +374,7 @@ public class FileServlet extends HttpServlet {
         }
         File fileDel = new File(heicPath);
         fileDel.delete();
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
     }
 }
 
