@@ -2,10 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.io.File" %>
 <%@ page import="java.util.List, java.util.Map, java.util.ArrayList, java.util.HashMap" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File List</title>
+    <title>Облако</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -83,13 +84,37 @@
             display: flex;
             gap: 10px;
         }
-        .file-link {
+        .file-links {
             text-decoration: none;
             color: #007bff;
         }
-        .file-link:hover {
+        .file-links:hover {
             text-decoration: underline;
         }
+        .file-link {
+            background-color: #007bff; /* Синий цвет для кнопки "Удалить и переименовать" */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 8px;
+            cursor: pointer;
+                    }
+
+        .file-link:hover {
+             background-color: #0056b3; /* Цвет при наведении на кнопку "Удалить и переименовать" */
+                    }
+        .convert-photo-button {
+             background-color: #007bff; /* Синий цвет для кнопки "Конвертировать" */
+             color: white;
+             border: none;
+             border-radius: 4px;
+             padding: 3px 8px;
+             cursor: pointer;
+                                   }
+
+        .convert-photo-button:hover {
+             background-color: #0056b3; /* Цвет при наведении на кнопку "Конвертировать" */
+                                   }
 
         @media (max-width: 768px) {
             .container {
@@ -347,7 +372,7 @@
             </c:choose>
         </c:forEach>
     </div>
-    <p>Свободное место на диске: <%= freeSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
+   <p>Свободное место на диске: <%= freeSpace %> ГБ из <%= totalSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
     <div class="create-folder-form">
         <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
             <div class="input-group"> <!-- Добавлен контейнер для поля ввода и кнопки -->
@@ -408,7 +433,7 @@
                     <c:when test="${file.name.toLowerCase().endsWith('.jar')}">
                         <i class="far fa-file-code"></i>
                     </c:when>
-                    <c:when test="${file.name.toLowerCase().endsWith('.heic')}">
+                     <c:when test="${file.name.toLowerCase().endsWith('.heic')}">
                      <i class="far fa-file-image"></i>
                     </c:when>
                     <c:otherwise>
@@ -421,19 +446,30 @@
                 &nbsp;
                <c:choose>
                     <c:when test="${file.directory}">
-                        <a class="file-link" href="<c:url value='/cloud/${file.name}/'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
+                        <a class="file-links" href="<c:url value='/cloud/${file.name}/'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
                     </c:when>
                     <c:otherwise>
-                        <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
+                        <a class="file-links" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
                     </c:otherwise>
                 </c:choose>
                 <p style="font-size: 10px">Изменено: <%= request.getAttribute("creationDate") %></p>
             </span>
-            <span class="file-actions">
-                <!-- Действия с файлом -->
-                <a class="file-link" href="javascript:void(0);" onclick="showRenameDialog('${file.name}')">Переименовать</a>
-                <a class="file-link" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='delete' /></c:url>">Удалить</a>
-            </span>
+<span class="file-actions">
+    <button type="button" class="file-link" onclick="showRenameDialog('${file.name}')">Переименовать</button>
+    <c:url var="deleteUrl" value="/cloud/${file.name}">
+        <c:param name="action" value="delete" />
+    </c:url>
+    <button type="button" class="file-link" onclick="location.href='${deleteUrl}'">Удалить</button>
+    <c:choose>
+            <c:when test="${fn:endsWith(file.name, '.HEIC') or fn:endsWith(file.name, '.heic')}">
+            <form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/cloud/" accept-charset="UTF-8">
+                    <input type="hidden" name="action" value="convert">
+                    <input type="hidden" name="fileName" value="${file.name}">
+                    <button type="submit" class="convert-photo-button">Конвертировать</button>
+                </form>
+            </c:when>
+        </c:choose>
+    </span>
         </li>
     </c:forEach>
 </ul>

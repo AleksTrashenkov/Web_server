@@ -3,7 +3,6 @@ package ru.web_server_home;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -11,13 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet("/cloud")
 @MultipartConfig(maxFileSize = 1024 * 1024 * 2000, maxRequestSize = 1024 * 1024 * 2000)
@@ -94,6 +89,10 @@ public class FileServlet extends HttpServlet {
                 break;
             case "findFolderFile" :
                 findFolderFile(response, request);
+                break;
+            case "convert" :
+                convertHEICtoJPEG(request, response, ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName"), ipTablesClientsFiles.get(request.getRemoteAddr())+ "/" + request.getParameter("fileName").replace(".heic","(изм. heic).jpg"));
+                //response.sendError(HttpServletResponse.SC_NOT_FOUND, "Здесь скоро будет обработчик конвертации "+ request.getParameter("fileName"));
                 break;
         }
     }
@@ -341,6 +340,24 @@ public class FileServlet extends HttpServlet {
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
         showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
+    }
+    public void convertHEICtoJPEG(HttpServletRequest request, HttpServletResponse response, String heicPath, String jpegPath) throws ServletException {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("C:\\Program Files\\ImageMagick-7.1.1-Q16-HDRI\\convert.exe", heicPath, jpegPath);
+            Process process = processBuilder.start();
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Конвертация завершена успешно.");
+            } else {
+                System.err.println("Произошла ошибка при конвертации.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        File fileDel = new File(heicPath);
+        fileDel.delete();
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
     }
 }
 
