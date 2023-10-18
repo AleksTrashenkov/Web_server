@@ -269,6 +269,24 @@
                                                                                                               font-size: 18px; /* Размер шрифта */
                                                                                                               /* Дополнительные стили, если необходимо */
                                                                                                             }
+                              .link-style {
+                                  display: flex;
+                                  align-items: center;
+                                  text-decoration: none;
+                              }
+
+                              .icon-video {
+                                  display: inline-block;
+                                  width: 75px; /* Ширина иконки */
+                                  height: 75px; /* Высота иконки */
+                                  background: url('/home_cloud/free-icon-video-folder-2200068.png') no-repeat;
+                                  background-size: cover; /* Масштабирование фона */
+                                  margin-right: 5px; /* Расстояние между иконкой и текстом */
+                              }
+
+                              .link-text {
+                                  flex: 1; /* Займет всю доступную ширину */
+                              }
     </style>
 </head>
 <body>
@@ -439,9 +457,11 @@
     </div>
 </div>
 <div class="video-player-container">
-    <h2>Видео-плеер</h2>
-    <!-- Заменяем видео-плеер на ссылку, которая отправляет запрос на сервлет -->
-    <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>" target="_blank">Перейти к видео</a>
+    <h2>Видео-раздел</h2>
+    <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>" target="_blank">
+        <i class="icon-video"></i>
+        <span class="link-text">Перейти к видео</span>
+    </a>
     <div class="video-playlist">
         <!-- Список видео для выбора -->
         <ul id="video-list">

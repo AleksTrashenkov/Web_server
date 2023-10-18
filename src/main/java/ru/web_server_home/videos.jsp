@@ -88,9 +88,7 @@
             text-decoration: none;
             color: #007bff;
         }
-        .video-playlist:hover {
-            text-decoration: underline;
-        }
+
         .convert-photo-button {
              background-color: #007bff; /* Синий цвет для кнопки "Конвертировать" */
              color: white;
@@ -243,7 +241,43 @@
                                                              #video-player {
                                                                  width: 100%; /* Задайте желаемую ширину видео-плеера, например, 100% */
                                                                  height: auto; /* Автоматическая высота для сохранения соотношения сторон */
-                                                             }
+}
+                                  .pagination {
+                                      display: flex;
+                                      justify-content: center;
+                                      align-items: center;
+                                      margin-top: 20px;
+                                  }
+
+                                  .pagination button {
+                                      padding: 8px 12px;
+                                      margin: 0 5px;
+                                      text-align: center;
+                                      text-decoration: none;
+                                      border: 1px solid #ddd;
+                                      border-radius: 3px;
+                                      cursor: pointer;
+                                      transition: background-color 0.3s, color 0.3s;
+                                  }
+
+                                  .pagination button:hover {
+                                      background-color: #f2f2f2;
+                                  }
+
+                                  .pagination button.current-page {
+                                      background-color: #007bff;
+                                      color: white;
+                                      border: 1px solid #007bff;
+                                  }
+
+                                  .pagination button[disabled] {
+                                      color: #ddd;
+                                      pointer-events: none;
+                                  }
+                          .playlist ul li:hover {
+                                  text-decoration: underline;
+                                  cursor: pointer;
+                              }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -324,21 +358,23 @@
 
     <h2>Видео-плеер</h2>
     <video id="video-player" controls>
-        <!-- Место для видео -->
+        <source src="" type="video/mp4">
+            Ваш браузер не поддерживает видео.
     </video>
     <div class="video-playlist">
         <!-- Список видео для выбора -->
+        <div class="playlist">
         <ul id="video-list">
             <c:forEach var="entry" items="${FileServlet.getStructureCloudPref('D:/cloud')}" varStatus="loop">
-                <li data-src="${entry.value}">Видео ${entry.key}</li>
+                <li class="video-item" data-src="${pageContext.request.contextPath}/cloud${entry.value}">Видео ${entry.key}</li>
             </c:forEach>
         </ul>
+        </div>
         <div class="pagination">
             <button id="prevPage">Предыдущая</button>
             <button id="nextPage">Следующая</button>
         </div>
     </div>
-
 <script>
     const videoPlayer = document.getElementById("video-player");
     const videoList = document.getElementById("video-list");
@@ -373,14 +409,14 @@
     updatePaginationButtons();
 
     // Обработчик клика по элементам списка видео
-    videoList.addEventListener("click", function (e) {
-        if (e.target.tagName === "LI") {
-            const videoSrc = e.target.getAttribute("data-src");
-            videoPlayer.src = videoSrc;
-            videoPlayer.load();
-            videoPlayer.play();
-        }
-    });
+        videoList.addEventListener("click", function (e) {
+            if (e.target.classList.contains("video-item")) {
+                const videoSrc = e.target.getAttribute("data-src");
+                videoPlayer.src = videoSrc;
+                videoPlayer.load();
+                videoPlayer.play();
+            }
+        });
 
     // Обработчик нажатия на кнопку "Предыдущая"
     prevPageButton.addEventListener("click", function () {
