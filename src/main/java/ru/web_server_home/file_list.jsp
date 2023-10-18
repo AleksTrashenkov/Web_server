@@ -28,8 +28,7 @@
             width: 90%; /* Changed width */
             max-width: 800px;
             margin: 20px auto; /* Centered on the screen */
-            margin-left: 280px; /* Левый отступ, который сдвинет содержимое влево */
-            margin-right: auto; /* Правый отступ для центрирования */
+
         }
         h1 {
             color: #333;
@@ -322,11 +321,11 @@
                                                            top: 20px; /* Отступ от верхней грани окна браузера */
                                                           right: 10px; /* Отступ от правой грани окна браузера */
                                                           font-size: 15px;
-                                                         color: #888;
+
                                                           background-color: #f8f8f8;
                                                           padding: 5px 3px;
                                                           border-radius: 5px;
-                                                           width: 300px; /* Установите желаемую ширину здесь */
+                                                           width: 260px; /* Установите желаемую ширину здесь */
                                                            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
                                                                             }
                                                                         /* Ваш стиль для ссылки */
@@ -355,6 +354,17 @@
                                                                .link-text {
                                                                    flex: 1; /* Займет всю доступную ширину */
                                                                }
+                          .link-home {
+                               display: flex;
+                               align-items: center;
+                               text-decoration: none;
+                                }.link-home {
+                                 color: #000000; /* Цвет текста ссылки */
+                                 text-decoration: none; /* Убирает подчеркивание */
+                                 font-weight: bold; /* Жирный шрифт */
+                                 font-size: 33px; /* Размер шрифта */
+                                 /* Дополнительные стили, если необходимо */
+                                          }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -412,7 +422,10 @@
     </div>
 </div>
 <div class="container">
-    <h1>Частное облако</h1>
+        <a class="link-home" href="${pageContext.request.contextPath}/cloud/">
+                <span class="link-text">Частное облако</span>
+            </a>
+            &nbsp;
     <div class="free-space">
             <%
                 long freeSpace = getFreeDiskSpace();
@@ -567,11 +580,10 @@
         </li>
     </c:forEach>
 </ul>
-<div class="video-player-container">
-    <h2>Видео-раздел</h2>
-    <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>" target="_blank">
+<div class="video-player-container" id="videoplayercontainer">
+    <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>">
         <i class="icon-video"></i>
-        <span class="link-text">Перейти к видео</span>
+        <span class="link-text">YouTube-Home</span>
     </a>
     <div class="video-playlist">
         <!-- Список видео для выбора -->
@@ -580,6 +592,25 @@
         </ul>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function checkDeviceType() {
+            console.log("Width: " + window.innerWidth);
+               if (window.innerWidth <= 885) {
+                       console.log("Hiding weather widget");
+                       document.getElementById("videoplayercontainer").style.display = "none";
+                   } else {
+                       console.log("Showing weather widget");
+                       document.getElementById("videoplayercontainer").style.display = "block";
+                   }
+        }
+
+        window.addEventListener("load", checkDeviceType);
+        window.addEventListener("resize", checkDeviceType);
+
+        checkDeviceType(); // Вызовем функцию при загрузке страницы
+    });
+</script>
 <div class="pagination">
     <c:choose>
         <c:when test="${currentPage > 1}">
@@ -602,7 +633,7 @@
     </c:choose>
 </div>
 <!-- Погодный информер будет размещен справа вне зоны с файлами -->
-<div class="weather-widget">
+<div class="weather-widget" id="weatherWidget">
 <!-- Gismeteo informer START -->
 <link rel="stylesheet" type="text/css" href="https://ost1.gismeteo.ru/assets/flat-ui/legacy/css/informer.min.css">
 <div id="gsInformerID-umA38j1kmiOUMV" class="gsInformer" style="width:243px;height:460px">
@@ -637,6 +668,25 @@
 <!-- Gismeteo informer END -->
 </div>
 <!-- Погодный информер размещен справа вне зоны с файлами -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function checkDeviceType() {
+            console.log("Width: " + window.innerWidth);
+               if (window.innerWidth <= 885) {
+                       console.log("Hiding weather widget");
+                       document.getElementById("weatherWidget").style.display = "none";
+                   } else {
+                       console.log("Showing weather widget");
+                       document.getElementById("weatherWidget").style.display = "block";
+                   }
+        }
+
+        window.addEventListener("load", checkDeviceType);
+        window.addEventListener("resize", checkDeviceType);
+
+        checkDeviceType(); // Вызовем функцию при загрузке страницы
+    });
+</script>
 <div class="footer">
     <small>© Т.А.В. - 2023</small>
 </div>

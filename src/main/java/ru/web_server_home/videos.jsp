@@ -30,8 +30,7 @@
             width: 90%; /* Changed width */
             max-width: 800px;
             margin: 20px auto; /* Centered on the screen */
-            margin-left: 280px; /* Левый отступ, который сдвинет содержимое влево */
-            margin-right: auto; /* Правый отступ для центрирования */
+
         }
         h1 {
             color: #333;
@@ -148,39 +147,7 @@
                 .btn-secondary {
                     background-color: #6c757d;
                 }
-                /* Стили для элементов пагинации */
-                .pagination {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 20px;
-                }
 
-                .pagination a, .pagination span {
-                    padding: 8px 12px;
-                    margin: 0 5px;
-                    text-align: center;
-                    text-decoration: none;
-                    border: 1px solid #ddd;
-                    border-radius: 3px;
-                    cursor: pointer;
-                    transition: background-color 0.3s, color 0.3s;
-                }
-
-                .pagination a:hover {
-                    background-color: #f2f2f2;
-                }
-
-                .pagination .current-page {
-                    background-color: #007bff;
-                    color: white;
-                    border: 1px solid #007bff;
-                }
-
-                .pagination .disabled {
-                    color: #ddd;
-                    pointer-events: none;
-                }
                .find-folder-file-form input[type="text"] {
                                                  width: 87%;
                                                  padding: 8px;
@@ -254,44 +221,56 @@
                                                                  width: 100%; /* Задайте желаемую ширину видео-плеера, например, 100% */
                                                                  height: auto; /* Автоматическая высота для сохранения соотношения сторон */
 }
-                                  .pagination {
-                                      display: flex;
-                                      justify-content: center;
-                                      align-items: center;
-                                      margin-top: 20px;
-                                  }
-
-                                  .pagination button {
-                                      padding: 8px 12px;
-                                      margin: 0 5px;
-                                      text-align: center;
-                                      text-decoration: none;
-                                      border: 1px solid #ddd;
-                                      border-radius: 3px;
-                                      cursor: pointer;
-                                      transition: background-color 0.3s, color 0.3s;
-                                  }
-
-                                  .pagination button:hover {
-                                      background-color: #f2f2f2;
-                                  }
-
-                                  .pagination button.current-page {
-                                      background-color: #007bff;
-                                      color: white;
-                                      border: 1px solid #007bff;
-                                  }
-
-                                  .pagination button[disabled] {
-                                      color: #ddd;
-                                      pointer-events: none;
-                                  }
 
                               .video-item i {
                                   font-size: 24px; /* Размер иконки */
                                   color: #007bff; /* Цвет иконки (ссылка на цветовую палитру) */
                                   margin-right: 10px; /* Расстояние между иконкой и текстом */
                               }
+.link-home {
+                               display: flex;
+                               align-items: center;
+                               text-decoration: none;
+                                }.link-home {
+                                 color: #000000; /* Цвет текста ссылки */
+                                 text-decoration: none; /* Убирает подчеркивание */
+                                 font-weight: bold; /* Жирный шрифт */
+                                 font-size: 33px; /* Размер шрифта */
+                                 /* Дополнительные стили, если необходимо */
+                                          }
+       /* Стили для элементов пагинации */
+       .pagination {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           margin-top: 20px;
+       }
+
+       .pagination a, .pagination button {
+           padding: 8px 12px;
+           margin: 0 5px;
+           text-align: center;
+           text-decoration: none;
+           border: 1px solid #ddd;
+           border-radius: 3px;
+           cursor: pointer;
+           transition: background-color 0.3s, color 0.3s;
+       }
+
+       .pagination a:hover, .pagination button:hover {
+           background-color: #f2f2f2;
+       }
+
+       .pagination .current-page {
+           background-color: #007bff;
+           color: white;
+           border: 1px solid #007bff;
+       }
+
+       .pagination button:disabled {
+           color: #ddd;
+           pointer-events: none;
+       }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -334,7 +313,10 @@
     });
 </script>
 <div class="container">
-    <h1>Частное облако</h1>
+      <a class="link-home" href="${pageContext.request.contextPath}/cloud/">
+               <span class="link-text">Частное облако</span>
+           </a>
+           &nbsp;
     <div class="free-space">
             <%
                 long freeSpace = getFreeDiskSpace();
@@ -370,7 +352,7 @@
    <p>Свободное место на диске: <%= freeSpace %> ГБ из <%= totalSpace %> ГБ (<%= (int) usedPercentage %>%)  <%= battery.toString() %></p>
 </div>
 
-    <h2>Видео-плеер</h2>
+    <h2>YouTube-Home</h2>
 <video id="video-player" controls>
     <source src="" type="video/mp4">
     Ваш браузер не поддерживает видео.
@@ -386,10 +368,10 @@
             </c:forEach>
         </ul>
     </div>
-    <div class="pagination">
-        <button id="prevPage">Предыдущая</button>
-        <button id="nextPage">Следующая</button>
-    </div>
+<div class="pagination">
+    <button id="prevPage" class="pagination-button">Предыдущая</button>
+    <button id="nextPage" class="pagination-button">Следующая</button>
+</div>
 </div>
 <script>
     const videoPlayer = document.getElementById("video-player");
