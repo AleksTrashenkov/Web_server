@@ -46,7 +46,9 @@ public class FileServlet extends HttpServlet {
                 try {
                     serveFile(requestedFilePath, response, request);
                 } catch (IOException es) {}
-            }  else {
+            } else if ("redirectToVideos".equals(action)) {
+                request.getRequestDispatcher("/WEB-INF/jsp/videos.jsp").forward(request, response);
+            } else {
                 if (requestedFilePath.endsWith("/")) {
                     showFolderContentsRUSPath(request, response, requestedFilePath);
                 } else {
@@ -257,10 +259,16 @@ public class FileServlet extends HttpServlet {
         scanDirectoryFind(new File(directory), wordFind, "all");
         return structureCloudFind;
     }
-    public static Multimap<String, File> getStructureCloudPref (String directory) {
-        scanDirectoryFind(new File(directory), null, ".mp4");
-        return structureCloudPref;
+    public static List<Map.Entry<String, File>> getStructureCloudPref (String directory) {
+        if (!structureCloudPref.isEmpty()){
+            structureCloudPref.clear();
+        }
+        scanDirectoryFind(new File(directory), null, ".mp4" );
+        List<Map.Entry<String, File>> searchResultsList = new ArrayList<>(structureCloudPref.entries());
+        return searchResultsList;
     }
+
+
     private static void scanDirectoryFind(File dir, String targetWord, String pref) {
         if (pref.equals("all") && targetWord != null) {
             if (dir.isDirectory()) {

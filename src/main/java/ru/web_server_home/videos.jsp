@@ -240,6 +240,10 @@
                                                              .scroll-to-top:hover {
                                                                  background-color: #0056b3;
                                                              }
+                                                             #video-player {
+                                                                 width: 100%; /* Задайте желаемую ширину видео-плеера, например, 100% */
+                                                                 height: auto; /* Автоматическая высота для сохранения соотношения сторон */
+                                                             }
     </style>
 <script>
  function showRenameDialog(oldFileName) {
@@ -344,7 +348,7 @@
     // Настройка пагинации
     const videosPerPage = 10;
     let currentPage = 1;
-    let totalVideos = ${cloudPrefList.size()};
+    let totalVideos = ${FileServlet.getStructureCloudPref('D:/cloud').size()};
     let totalPages = Math.ceil(totalVideos / videosPerPage);
 
     function showVideosForPage(page) {
