@@ -51,7 +51,9 @@ public class FileServlet extends HttpServlet {
             } else {
                 if (requestedFilePath.endsWith("/")) {
                     showFolderContentsRUSPath(request, response, requestedFilePath);
-                } else {
+                } else if (requestedFilePath.endsWith(".mp4")) {
+                    serveFileLoader(requestedFilePath, response, request);
+                }else {
                     String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
                     try {
                         response.sendRedirect(redirectPath);
@@ -123,6 +125,33 @@ public class FileServlet extends HttpServlet {
             } else {
                 // Если и файл не существует, и папка не существует, то выведите сообщение об ошибке.
                // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
+                //serveFile(requestedFilePath, response, request);
+            }
+        }
+    }
+    private void serveFileLoader(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
+        String filePath = UPLOAD_DIRECTORY + requestedFilePath;
+        File file = new File(filePath);
+
+        if (file.exists() && file.isFile()) {
+            response.setContentType(getContentType(filePath));
+            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+
+            try (InputStream inputStream = new FileInputStream(file);
+                 OutputStream outputStream = response.getOutputStream()) {
+                byte[] buffer = new byte[2097152];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
+        } else {
+            // Если папка не существует или не является директорией, то проверьте, существует ли файл и предпросмотрите его, если он существует.
+            if (file.exists() && file.isDirectory()) {
+                showFolderContents(request, response, requestedFilePath);
+            } else {
+                // Если и файл не существует, и папка не существует, то выведите сообщение об ошибке.
+                // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
                 //serveFile(requestedFilePath, response, request);
             }
         }
