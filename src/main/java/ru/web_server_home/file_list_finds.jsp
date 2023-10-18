@@ -20,14 +20,16 @@
             min-height: 100vh;
         }
         .container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%; /* Changed width */
-            max-width: 800px;
-            margin: 20px auto; /* Centered on the screen */
-        }
+                    background-color: white;
+                    border-radius: 10px;
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                    width: 90%; /* Changed width */
+                    max-width: 800px;
+                    margin: 20px auto; /* Centered on the screen */
+                    margin-left: 280px; /* Левый отступ, который сдвинет содержимое влево */
+                    margin-right: auto; /* Правый отступ для центрирования */
+                }
         h1 {
             color: #333;
             margin-bottom: 20px;
@@ -247,6 +249,26 @@
                                               .scroll-to-top:hover {
                                                   background-color: #0056b3;
                                               }
+                                              .video-player-container {
+                                                                                                          position: fixed; /* Зафиксированное позиционирование */
+                                                                                                         top: 20px; /* Отступ от верхней грани окна браузера */
+                                                                                                        right: 10px; /* Отступ от правой грани окна браузера */
+                                                                                                        font-size: 15px;
+                                                                                                       color: #888;
+                                                                                                        background-color: #f8f8f8;
+                                                                                                        padding: 5px 3px;
+                                                                                                        border-radius: 5px;
+                                                                                                         width: 300px; /* Установите желаемую ширину здесь */
+                                                                                                         box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+                                                                                                                          }
+                                                                                                                      /* Ваш стиль для ссылки */
+                                                                                                              .link-style {
+                                                                                                              color: #0073e6; /* Цвет текста ссылки */
+                                                                                                             text-decoration: none; /* Убирает подчеркивание */
+                                                                                                               font-weight: bold; /* Жирный шрифт */
+                                                                                                              font-size: 18px; /* Размер шрифта */
+                                                                                                              /* Дополнительные стили, если необходимо */
+                                                                                                            }
     </style>
 </head>
 <body>
@@ -387,12 +409,12 @@
 <!-- Погодный информер будет размещен справа вне зоны с файлами -->
 <div class="weather-widget">
 <!-- Gismeteo informer START -->
-<link rel="stylesheet" type="text/css" href="https://nst1.gismeteo.ru/assets/flat-ui/legacy/css/informer.min.css">
-<div id="gsInformerID-Gi425MB1NuM85k" class="gsInformer" style="width:267px;height:200px">
+<link rel="stylesheet" type="text/css" href="https://ost1.gismeteo.ru/assets/flat-ui/legacy/css/informer.min.css">
+<div id="gsInformerID-umA38j1kmiOUMV" class="gsInformer" style="width:243px;height:460px">
     <div class="gsIContent">
         <div id="cityLink">
             <a href="https://www.gismeteo.ru/weather-moscow-4368/" target="_blank" title="Погода в Москве">
-                <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/gisloader.svg" width="24" height="24" alt="Погода в Москве">
+                <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/gisloader.svg" width="24" height="24" alt="Погода в Москве">
             </a>
             </div>
         <div class="gsLinks">
@@ -401,13 +423,13 @@
                     <td>
                         <div class="leftCol">
                             <a href="https://www.gismeteo.ru/" target="_blank" title="Погода">
-                                <img alt="Погода" src="https://nst1.gismeteo.ru/assets/flat-ui/img/logo-mini2.png" align="middle" border="0" width="11" height="16" />
-                                <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/informer/gismeteo.svg" border="0" align="middle" style="left: 5px; top:1px">
+                                <img alt="Погода" src="https://ost1.gismeteo.ru/assets/flat-ui/img/logo-mini2.png" align="middle" border="0" width="11" height="16" />
+                                <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/informer/gismeteo.svg" border="0" align="middle" style="left: 5px; top:1px">
                             </a>
                             </div>
                             <div class="rightCol">
                                 <a href="https://www.gismeteo.ru/" target="_blank" title="Погода в Москве на 2 недели">
-                                    <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/informer/forecast-2weeks.ru.svg" border="0" align="middle" style="top:auto" alt="Погода в Москве на 2 недели">
+                                    <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/informer/forecast-2weeks.ru.svg" border="0" align="middle" style="top:auto" alt="Погода в Москве на 2 недели">
                                 </a>
                             </div>
                         </td>
@@ -416,7 +438,18 @@
         </div>
     </div>
 </div>
-<script async src="https://www.gismeteo.ru/api/informer/getinformer/?hash=Gi425MB1NuM85k"></script>
+<div class="video-player-container">
+    <h2>Видео-плеер</h2>
+    <!-- Заменяем видео-плеер на ссылку, которая отправляет запрос на сервлет -->
+    <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>" target="_blank">Перейти к видео</a>
+    <div class="video-playlist">
+        <!-- Список видео для выбора -->
+        <ul id="video-list">
+            <!-- Здесь можно добавить элементы списка видео -->
+        </ul>
+    </div>
+</div>
+<script async src="https://www.gismeteo.ru/api/informer/getinformer/?hash=umA38j1kmiOUMV"></script>
 <!-- Gismeteo informer END -->
 </div>
 <!-- Погодный информер размещен справа вне зоны с файлами -->

@@ -23,6 +23,7 @@ public class FileServlet extends HttpServlet {
     public static HashMap<String, String> ipTablesClients = new HashMap<>();
     public static HashMap<String,String> ipTablesClientsFiles = new HashMap<>();
     public static Multimap<String, File> structureCloudFind = ArrayListMultimap.create();
+    public static Multimap<String, File> structureCloudPref = ArrayListMultimap.create();
     public static HashMap<String, String> ipTalesNameFolder = new HashMap<>();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -225,7 +226,7 @@ public class FileServlet extends HttpServlet {
             file.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY, ""));
         } catch (ServletException | IOException ex) {}
     }
 
@@ -235,7 +236,7 @@ public class FileServlet extends HttpServlet {
             folder.delete();
         }
         try {
-            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace("D:/cloud", ""));
+            showFolderContents(request, response, ipTablesClients.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY, ""));
         }catch (ServletException | IOException ex) {}
     }
     private void findFolderFile (HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
@@ -252,19 +253,34 @@ public class FileServlet extends HttpServlet {
         // Перенаправьте запрос на JSP-страницу
         request.getRequestDispatcher("/WEB-INF/jsp/file_list_finds.jsp").forward(request, response);
     }
-
     public static Multimap<String, File> getStructureFind(String directory, String wordFind) {
-        scanDirectoryFind(new File(directory), wordFind);
+        scanDirectoryFind(new File(directory), wordFind, "all");
         return structureCloudFind;
     }
-    private static void scanDirectoryFind(File dir, String targetWord) {
-        if (dir.isDirectory()) {
-            for (File item : dir.listFiles()) {
-                String itemName = item.getName().toLowerCase();
-                if (itemName.contains(targetWord.toLowerCase())) {
-                    structureCloudFind.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace("D:/cloud/", "")));
+    public static Multimap<String, File> getStructureCloudPref (String directory) {
+        scanDirectoryFind(new File(directory), null, ".mp4");
+        return structureCloudPref;
+    }
+    private static void scanDirectoryFind(File dir, String targetWord, String pref) {
+        if (pref.equals("all") && targetWord != null) {
+            if (dir.isDirectory()) {
+                for (File item : dir.listFiles()) {
+                    String itemName = item.getName().toLowerCase();
+                    if (itemName.contains(targetWord.toLowerCase())) {
+                        structureCloudFind.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
+                    }
+                    scanDirectoryFind(item, targetWord, pref);
                 }
-                scanDirectoryFind(item, targetWord);
+            }
+        }else {
+            if (dir.isDirectory()) {
+                for (File item : dir.listFiles()) {
+                    String itemName = item.getName().toLowerCase();
+                    if (itemName.endsWith(pref.toLowerCase())) {
+                        structureCloudPref.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
+                    }
+                    scanDirectoryFind(item, targetWord, pref);
+                }
             }
         }
     }
@@ -295,7 +311,7 @@ public class FileServlet extends HttpServlet {
                 newFolder.mkdirs();
             }
         }
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY, ""));
     }
     public void rename (HttpServletRequest request, HttpServletResponse response) throws IOException {
         String oldFileName = request.getParameter("oldFileName");
@@ -317,7 +333,7 @@ public class FileServlet extends HttpServlet {
             if (oldFile.renameTo(newFile)) {
                 //response.getWriter().write("success"); // Отправляем успешный ответ
                 try {
-                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud", ""));
+                    showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY, ""));
                 }catch (ServletException ex) {}
             } else {
                 response.getWriter().write("error"); // Отправляем ответ об ошибке
@@ -345,7 +361,7 @@ public class FileServlet extends HttpServlet {
             }
         }
         // После загрузки файлов перенаправляем пользователя на страницу с содержимым папки
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY,""));
     }
     public void convertHEICtoJPEG(HttpServletRequest request, HttpServletResponse response, String heicPath, String jpegPath) throws ServletException, IOException {
         try {
@@ -374,7 +390,7 @@ public class FileServlet extends HttpServlet {
         }
         File fileDel = new File(heicPath);
         fileDel.delete();
-        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace("D:/cloud",""));
+        showFolderContents(request, response, ipTablesClientsFiles.get(request.getRemoteAddr()).replace(UPLOAD_DIRECTORY,""));
     }
 }
 
