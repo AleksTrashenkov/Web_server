@@ -51,7 +51,11 @@ public class FileServlet extends HttpServlet {
             } else {
                 if (requestedFilePath.endsWith("/")) {
                     showFolderContentsRUSPath(request, response, requestedFilePath);
-                } else if (requestedFilePath.endsWith(".mp4")) {
+                } else if (requestedFilePath.endsWith(".mp4") || requestedFilePath.endsWith(".MOV")
+                        || requestedFilePath.endsWith(".avi") || requestedFilePath.endsWith(".3gp")
+                        || requestedFilePath.endsWith(".MKV".toLowerCase())
+                        || requestedFilePath.endsWith(".WMV".toLowerCase()) || requestedFilePath.endsWith(".WebM".toLowerCase())
+                        || requestedFilePath.endsWith(".Ogg".toLowerCase())) {
                     serveFileLoader(requestedFilePath, response, request);
                 }else {
                     String redirectPath = request.getContextPath() + "/cloud" + requestedFilePath + "/";
@@ -313,7 +317,9 @@ public class FileServlet extends HttpServlet {
             if (dir.isDirectory()) {
                 for (File item : dir.listFiles()) {
                     String itemName = item.getName().toLowerCase();
-                    if (itemName.endsWith(pref.toLowerCase())) {
+                    if (itemName.endsWith(pref.toLowerCase()) || itemName.endsWith(".MOV".toLowerCase()) || itemName.endsWith(".avi".toLowerCase())
+                            || itemName.endsWith(".3gp".toLowerCase()) || itemName.endsWith(".MKV".toLowerCase())
+                    || itemName.endsWith(".WMV".toLowerCase()) || itemName.endsWith(".WebM".toLowerCase()) || itemName.endsWith(".Ogg".toLowerCase())) {
                         structureCloudPref.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
                     }
                     scanDirectoryFind(item, targetWord, pref);

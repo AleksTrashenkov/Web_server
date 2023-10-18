@@ -199,6 +199,18 @@
                .search-button:hover {
                    background-color: #0056b3;
                }
+               .play-pause-button {
+                                                     background-color: #007bff;
+                                                     color: white;
+                                                     border: none;
+                                                     border-radius: 4px;
+                                                     padding: 5px 10px;
+                                                     cursor: pointer;
+                                                 }
+
+                                                 .play-pause-button:hover {
+                                                     background-color: #0056b3;
+                                                 }
                .weather-widget {
                    position: fixed; /* Зафиксированное позиционирование */
                    top: 20px; /* Отступ от верхней грани окна браузера */
@@ -274,9 +286,11 @@
                                       color: #ddd;
                                       pointer-events: none;
                                   }
-                          .playlist ul li:hover {
-                                  text-decoration: underline;
-                                  cursor: pointer;
+
+                              .video-item i {
+                                  font-size: 24px; /* Размер иконки */
+                                  color: #007bff; /* Цвет иконки (ссылка на цветовую палитру) */
+                                  margin-right: 10px; /* Расстояние между иконкой и текстом */
                               }
     </style>
 <script>
@@ -357,29 +371,32 @@
 </div>
 
     <h2>Видео-плеер</h2>
-    <video id="video-player" controls>
-        <source src="" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-    </video>
-    <div class="video-playlist">
-        <!-- Список видео для выбора -->
-        <div class="playlist">
+<video id="video-player" controls>
+    <source src="" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+</video>
+<div class="video-playlist">
+    <!-- Список видео для выбора -->
+    <div class="playlist">
         <ul id="video-list">
             <c:forEach var="entry" items="${FileServlet.getStructureCloudPref('D:/cloud')}" varStatus="loop">
-                <li class="video-item" data-src="${pageContext.request.contextPath}/cloud${entry.value}">Видео ${entry.key}</li>
+                <li class="video-item" data-src="${pageContext.request.contextPath}/cloud${entry.value}">
+                    <i class="fas fa-file-video"></i> <button class="play-pause-button" data-src="${pageContext.request.contextPath}/cloud${entry.value}">Play</button> ${entry.key}
+                </li>
             </c:forEach>
         </ul>
-        </div>
-        <div class="pagination">
-            <button id="prevPage">Предыдущая</button>
-            <button id="nextPage">Следующая</button>
-        </div>
     </div>
+    <div class="pagination">
+        <button id="prevPage">Предыдущая</button>
+        <button id="nextPage">Следующая</button>
+    </div>
+</div>
 <script>
     const videoPlayer = document.getElementById("video-player");
     const videoList = document.getElementById("video-list");
     const prevPageButton = document.getElementById("prevPage");
     const nextPageButton = document.getElementById("nextPage");
+    const playPauseButtons = document.querySelectorAll(".play-pause-button");
 
     // Настройка пагинации
     const videosPerPage = 10;
@@ -400,23 +417,25 @@
             }
         }
     }
+
     function updatePaginationButtons() {
         prevPageButton.disabled = currentPage === 1;
         nextPageButton.disabled = currentPage === totalPages;
     }
+
     // Показать видео для первой страницы
     showVideosForPage(currentPage);
     updatePaginationButtons();
 
     // Обработчик клика по элементам списка видео
-        videoList.addEventListener("click", function (e) {
-            if (e.target.classList.contains("video-item")) {
-                const videoSrc = e.target.getAttribute("data-src");
-                videoPlayer.src = videoSrc;
-                videoPlayer.load();
-                videoPlayer.play();
-            }
-        });
+    videoList.addEventListener("click", function (e) {
+        if (e.target.classList.contains("video-item")) {
+            const videoSrc = e.target.getAttribute("data-src");
+            videoPlayer.src = videoSrc;
+            videoPlayer.load();
+            videoPlayer.play();
+        }
+    });
 
     // Обработчик нажатия на кнопку "Предыдущая"
     prevPageButton.addEventListener("click", function () {
@@ -435,6 +454,30 @@
             updatePaginationButtons();
         }
     });
+
+// Обработчик нажатия на кнопки Play/Pause
+playPauseButtons.forEach(button => {
+    button.addEventListener("click", function () {
+        const videoSrc = button.getAttribute("data-src");
+        if (videoPlayer.src === videoSrc) {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                button.textContent = "Pause";
+            } else {
+                videoPlayer.pause();
+                button.textContent = "Play";
+            }
+        } else {
+            videoPlayer.src = videoSrc;
+            videoPlayer.load();
+            videoPlayer.play();
+            playPauseButtons.forEach(playPauseButton => {
+                playPauseButton.textContent = "Play";
+            });
+            button.textContent = "Pause";
+        }
+    });
+});
 </script>
 <!-- Погодный информер будет размещен справа вне зоны с файлами -->
 <div class="weather-widget">
