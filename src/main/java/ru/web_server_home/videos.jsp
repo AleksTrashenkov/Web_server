@@ -178,17 +178,7 @@
                                                  .play-pause-button:hover {
                                                      background-color: #0056b3;
                                                  }
-               .weather-widget {
-                   position: fixed; /* Зафиксированное позиционирование */
-                   top: 20px; /* Отступ от верхней грани окна браузера */
-                   left: 10px; /* Отступ от правой грани окна браузера */
-                   font-size: 12px;
-                   color: #888;
-                   background-color: #f8f8f8;
-                   padding: 5px 10px;
-                   border-radius: 5px;
-                   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-               }
+
                .video-player-container {
                                                           font-size: 15px;
                                                           color: #888;
@@ -461,42 +451,6 @@ playPauseButtons.forEach(button => {
     });
 });
 </script>
-<!-- Погодный информер будет размещен справа вне зоны с файлами -->
-<div class="weather-widget">
-<!-- Gismeteo informer START -->
-<link rel="stylesheet" type="text/css" href="https://ost1.gismeteo.ru/assets/flat-ui/legacy/css/informer.min.css">
-<div id="gsInformerID-umA38j1kmiOUMV" class="gsInformer" style="width:243px;height:460px">
-    <div class="gsIContent">
-        <div id="cityLink">
-            <a href="https://www.gismeteo.ru/weather-moscow-4368/" target="_blank" title="Погода в Москве">
-                <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/gisloader.svg" width="24" height="24" alt="Погода в Москве">
-            </a>
-            </div>
-        <div class="gsLinks">
-            <table>
-                <tr>
-                    <td>
-                        <div class="leftCol">
-                            <a href="https://www.gismeteo.ru/" target="_blank" title="Погода">
-                                <img alt="Погода" src="https://ost1.gismeteo.ru/assets/flat-ui/img/logo-mini2.png" align="middle" border="0" width="11" height="16" />
-                                <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/informer/gismeteo.svg" border="0" align="middle" style="left: 5px; top:1px">
-                            </a>
-                            </div>
-                            <div class="rightCol">
-                                <a href="https://www.gismeteo.ru/" target="_blank" title="Погода в Москве на 2 недели">
-                                    <img src="https://ost1.gismeteo.ru/assets/flat-ui/img/informer/forecast-2weeks.ru.svg" border="0" align="middle" style="top:auto" alt="Погода в Москве на 2 недели">
-                                </a>
-                            </div>
-                        </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-<script async src="https://www.gismeteo.ru/api/informer/getinformer/?hash=umA38j1kmiOUMV"></script>
-<!-- Gismeteo informer END -->
-</div>
-<!-- Погодный информер размещен справа вне зоны с файлами -->
 <div class="footer">
     <small>© Т.А.В. - 2023</small>
 </div>

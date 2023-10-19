@@ -581,6 +581,9 @@
     </c:forEach>
 </ul>
 <div class="video-player-container" id="videoplayercontainer">
+<div class="ip">
+<p>Ваш IP-адрес: ${ipAdres}</p>
+</div>
     <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>">
         <i class="icon-video"></i>
         <span class="link-text">YouTube-Home</span>

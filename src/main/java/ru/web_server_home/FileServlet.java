@@ -47,6 +47,9 @@ public class FileServlet extends HttpServlet {
                     serveFile(requestedFilePath, response, request);
                 } catch (IOException es) {}
             } else if ("redirectToVideos".equals(action)) {
+                String ipAdres = request.getRemoteAddr();
+
+                request.setAttribute("ipAdres", ipAdres);
                 request.getRequestDispatcher("/WEB-INF/jsp/videos.jsp").forward(request, response);
             } else {
                 if (requestedFilePath.endsWith("/")) {
@@ -133,6 +136,9 @@ public class FileServlet extends HttpServlet {
             }
         }
     }
+    public static void getIPClient () {
+
+    }
     private void serveFileLoader(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         String filePath = UPLOAD_DIRECTORY + requestedFilePath;
         File file = new File(filePath);
@@ -180,7 +186,9 @@ public class FileServlet extends HttpServlet {
 
                 long creationTime = folder.lastModified();
                 Date creationDate = new Date(creationTime);
+                String ipAdres = request.getRemoteAddr();
 
+                request.setAttribute("ipAdres", ipAdres);
                 request.setAttribute("creationDate", creationDate);
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("itemsPerPage", itemsPerPage);
@@ -227,6 +235,9 @@ public class FileServlet extends HttpServlet {
                     long creationTime = folder.lastModified();
                     Date creationDate = new Date(creationTime);
 
+                    String ipAdres = request.getRemoteAddr();
+
+                    request.setAttribute("ipAdres", ipAdres);
                     request.setAttribute("creationDate", creationDate);
                     request.setAttribute("currentPage", currentPage);
                     request.setAttribute("itemsPerPage", itemsPerPage);
@@ -283,6 +294,9 @@ public class FileServlet extends HttpServlet {
         List<Map.Entry<String, File>> searchResultsList = new ArrayList<>(searchResults.entries());
 
         // Сохраните результаты поиска в атрибуте запроса
+        String ipAdres = request.getRemoteAddr();
+
+        request.setAttribute("ipAdres", ipAdres);
         request.setAttribute("searchResults", searchResultsList);
         request.setAttribute("wordFind", wordFind);
         // Перенаправьте запрос на JSP-страницу
@@ -298,6 +312,7 @@ public class FileServlet extends HttpServlet {
         }
         scanDirectoryFind(new File(directory), null, ".mp4" );
         List<Map.Entry<String, File>> searchResultsList = new ArrayList<>(structureCloudPref.entries());
+        searchResultsList.sort((entry1, entry2) -> entry1.getKey().compareTo(entry2.getKey()));
         return searchResultsList;
     }
 
