@@ -12,6 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @WebServlet("/cloud")
@@ -335,9 +341,16 @@ public class FileServlet extends HttpServlet {
                     if (itemName.endsWith(pref.toLowerCase()) || itemName.endsWith(".MOV".toLowerCase()) || itemName.endsWith(".avi".toLowerCase())
                             || itemName.endsWith(".3gp".toLowerCase()) || itemName.endsWith(".MKV".toLowerCase())
                     || itemName.endsWith(".WMV".toLowerCase()) || itemName.endsWith(".WebM".toLowerCase()) || itemName.endsWith(".Ogg".toLowerCase())) {
+                        DecimalFormat df = new DecimalFormat("0.##");
                         long fileSize = new File(item.getAbsolutePath()).length(); // Получение размера файла в байтах
-                        double fileSizeInGB = (double) fileSize / (1024 * 1024 * 1024); // Перевод в гигабайты
-                        structureCloudPref.put(itemName + "("+fileSizeInGB+" Гб)", new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
+                        double fileSizeInGB = (double) fileSize / (1024 * 1024); // Перевод в гигабайты
+                        String formattedSize = df.format(fileSizeInGB);
+                        long creationTime = new File(item.getAbsolutePath()).lastModified();
+                        Instant instant = Instant.ofEpochMilli(creationTime);
+                        LocalDateTime lastModCreat = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                        String formattedDateTime = lastModCreat.format(dateTimeFormatter);
+                        structureCloudPref.put(itemName + " ("+formattedSize+" Мб, созд. "+formattedDateTime+")", new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
                     }
                     scanDirectoryFind(item, targetWord, pref);
                 }

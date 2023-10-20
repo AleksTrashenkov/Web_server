@@ -211,11 +211,20 @@
                                                                  width: 100%; /* Задайте желаемую ширину видео-плеера, например, 100% */
                                                                  height: auto; /* Автоматическая высота для сохранения соотношения сторон */
 }
-
+.video-container {
+    width: 100%; /* Ширина равна ширине родительского элемента (возможно, окна браузера) */
+    max-width: 800px; /* Максимальная ширина видео контейнера */
+    margin: 0 auto; /* Выравнивание по центру */
+}
                               .video-item i {
                                   font-size: 24px; /* Размер иконки */
                                   color: #007bff; /* Цвет иконки (ссылка на цветовую палитру) */
                                   margin-right: 10px; /* Расстояние между иконкой и текстом */
+
+                              }
+                              .video-item {
+                                  white-space: normal; /* Разрешить перенос слов */
+                                  overflow-wrap: break-word; /* Перенос слов на границе контейнера */
                               }
 .link-home {
                                display: flex;
@@ -343,10 +352,15 @@
 </div>
 
     <h2>YouTube-Home</h2>
-<video id="video-player" controls>
-    <source src="" type="video/mp4">
+    <div class="video-container">
+<video id="video-player" controls width="800" height="450" preload="auto">
+    <source src="video.mp4" type="video/mp4">
+    <source src="video.3gp" type="video/3gpp">
+      <source src="video.wmv" type="video/x-ms-wmv">
+      <source src="video.avi" type="video/x-msvideo">
     Ваш браузер не поддерживает видео.
 </video>
+</div>
 <div class="video-playlist">
     <!-- Список видео для выбора -->
     <div class="playlist">
