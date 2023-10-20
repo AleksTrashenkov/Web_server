@@ -335,7 +335,9 @@ public class FileServlet extends HttpServlet {
                     if (itemName.endsWith(pref.toLowerCase()) || itemName.endsWith(".MOV".toLowerCase()) || itemName.endsWith(".avi".toLowerCase())
                             || itemName.endsWith(".3gp".toLowerCase()) || itemName.endsWith(".MKV".toLowerCase())
                     || itemName.endsWith(".WMV".toLowerCase()) || itemName.endsWith(".WebM".toLowerCase()) || itemName.endsWith(".Ogg".toLowerCase())) {
-                        structureCloudPref.put(itemName, new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
+                        long fileSize = new File(item.getAbsolutePath()).length(); // Получение размера файла в байтах
+                        double fileSizeInGB = (double) fileSize / (1024 * 1024 * 1024); // Перевод в гигабайты
+                        structureCloudPref.put(itemName + "("+fileSizeInGB+" Гб)", new File(item.getAbsolutePath().replace("\\", "/").replace(UPLOAD_DIRECTORY, "")));
                     }
                     scanDirectoryFind(item, targetWord, pref);
                 }
