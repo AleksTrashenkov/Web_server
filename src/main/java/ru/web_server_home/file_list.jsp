@@ -691,7 +691,7 @@ if (isMobile) {
             var isMobile = "<%=isMobile%>"; // Задаем значение brawser на стороне клиента
             console.log(isMobile);
             console.log("Width: " + window.innerWidth);
-               if ((window.innerWidth <= 885 || isMobile === "true") || currentURL === "https://192.168.88.47/home_cloud/cloud/") {
+               if ((window.innerWidth <= 885 || isMobile === "true") || currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
                        document.getElementById("weatherWidget").style.display = "none";
                        <!--document.getElementById("otherWidget").style.display = "block";-->
                    } else {
