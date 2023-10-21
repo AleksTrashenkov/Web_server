@@ -40,7 +40,7 @@ public class Main {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }*/
-       String programmName = "convert.exe"; // Название программы, которую вы хотите проверить
+/*       String programmName = "convert.exe"; // Название программы, которую вы хотите проверить
 
         try {
             Process process = Runtime.getRuntime().exec(System.getenv("windir") + "\\system32\\" + "tasklist.exe");
@@ -62,7 +62,36 @@ public class Main {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+/*        try {
+            // Укажите путь к исполняемому файлу FFmpeg
+            String ffmpegPath = "/путь/к/ffmpeg";
+
+            // Укажите путь к вашему файлу 3GP и MP4
+            String inputVideo = "/путь/к/input.3gp";
+            String outputVideo = "/путь/к/output.mp4";
+
+            // Создайте команду для конвертации
+            String[] cmd = { ffmpegPath, "-i", inputVideo, "-c:v", "libx264", "-strict", "-2", outputVideo };
+
+            // Запустите процесс FFmpeg
+            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+            Process process = processBuilder.start();
+
+            // Дождитесь завершения процесса
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                // Конвертация успешно завершена
+                response.getWriter().write("Конвертация успешно завершена!");
+            } else {
+                // Произошла ошибка
+                response.getWriter().write("Произошла ошибка во время конвертации.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            response.getWriter().write("Произошла ошибка: " + e.getMessage());
+        }*/
         /*String heicPath = "C:\\Users\\server\\OneDrive\\Рабочий стол\\2020-02-04 11.14.40.HEIC"; // Замените путь к вашему HEIC изображению
         String jpegPath = "C:\\Users\\server\\OneDrive\\Рабочий стол\\2020-02-04 11.14.40.jpg"; // Путь для сохранения результата в формате JPEG
 
