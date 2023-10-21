@@ -425,9 +425,20 @@
     </c:forEach>
 </ul>
 </div>
+<%
+String userAgent = request.getHeader("User-Agent");
+boolean isMobile = userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android");
+String brawser;
+if (isMobile) {
+    brawser = "Мобильный браузер";
+} else {
+   brawser = "Десктопный браузер";
+}
+%>
 <div class="video-player-container" id="videoplayercontainer">
 <div class="ip">
 <p>Ваш IP-адрес: ${ipAdres}</p>
+<p><%=brawser%></p>
 </div>
     <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>">
         <i class="icon-video"></i>

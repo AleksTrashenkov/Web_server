@@ -580,9 +580,21 @@
         </li>
     </c:forEach>
 </ul>
+<%
+String userAgent = request.getHeader("User-Agent");
+boolean isMobile = userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android");
+String brawser;
+if (isMobile) {
+    brawser = "Мобильный браузер";
+} else {
+   brawser = "Десктопный браузер";
+}
+%>
+
 <div class="video-player-container" id="videoplayercontainer">
 <div class="ip">
 <p>Ваш IP-адрес: ${ipAdres}</p>
+<p><%=brawser%></p>
 </div>
     <a class="link-style" href="<c:url value='/cloud'><c:param name='action' value='redirectToVideos' /></c:url>">
         <i class="icon-video"></i>
@@ -598,12 +610,12 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         function checkDeviceType() {
-            console.log("Width: " + window.innerWidth);
+            currentURL = window.location.href;
                if (window.innerWidth <= 885) {
-                       console.log("Hiding weather widget");
+
                        document.getElementById("videoplayercontainer").style.display = "none";
                    } else {
-                       console.log("Showing weather widget");
+
                        document.getElementById("videoplayercontainer").style.display = "block";
                    }
         }
@@ -676,8 +688,10 @@
         function checkDeviceType() {
         // Определите текущий URL и покажите соответствующий информер
             var currentURL = window.location.href;
+            var isMobile = "<%=isMobile%>"; // Задаем значение brawser на стороне клиента
+            console.log(isMobile);
             console.log("Width: " + window.innerWidth);
-               if (window.innerWidth <= 885 || currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
+               if ((window.innerWidth <= 885 || isMobile === "true") || currentURL === "https://192.168.88.47/home_cloud/cloud/") {
                        document.getElementById("weatherWidget").style.display = "none";
                        <!--document.getElementById("otherWidget").style.display = "block";-->
                    } else {
