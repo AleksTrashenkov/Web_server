@@ -674,13 +674,15 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         function checkDeviceType() {
+        // Определите текущий URL и покажите соответствующий информер
+            var currentURL = window.location.href;
             console.log("Width: " + window.innerWidth);
-               if (window.innerWidth <= 885) {
-                       console.log("Hiding weather widget");
+               if (window.innerWidth <= 885 || currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
                        document.getElementById("weatherWidget").style.display = "none";
+                       <!--document.getElementById("otherWidget").style.display = "block";-->
                    } else {
-                       console.log("Showing weather widget");
                        document.getElementById("weatherWidget").style.display = "block";
+                       <!--document.getElementById("otherWidget").style.display = "none";-->
                    }
         }
 
