@@ -734,8 +734,13 @@ if (isMobile) {
                        document.getElementById("otherWidget").style.display = "block";
                        }
                    } else {
+                   if (window.innerWidth <= 885) {
+                   document.getElementById("weatherWidget").style.display = "none";
+                   document.getElementById("otherWidget").style.display = "none";
+                   } else {
                        document.getElementById("weatherWidget").style.display = "block";
                        document.getElementById("otherWidget").style.display = "none";
+                       }
                    }
         }
 
