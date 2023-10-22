@@ -683,6 +683,40 @@ if (isMobile) {
 <!-- Gismeteo informer END -->
 </div>
 <!-- Погодный информер размещен справа вне зоны с файлами -->
+<div class="weather-widget" id="otherWidget">
+<!-- Gismeteo informer START -->
+<link rel="stylesheet" type="text/css" href="https://nst1.gismeteo.ru/assets/flat-ui/legacy/css/informer.min.css">
+<div id="gsInformerID-jd1jkgrl4WWTAR" class="gsInformer" style="width:244px;height:460px">
+    <div class="gsIContent">
+        <div id="cityLink">
+            <a href="https://www.gismeteo.ru/weather-moscow-4368/" target="_blank" title="Погода в Москве">
+                <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/gisloader.svg" width="24" height="24" alt="Погода в Москве">
+            </a>
+            </div>
+        <div class="gsLinks">
+            <table>
+                <tr>
+                    <td>
+                        <div class="leftCol">
+                            <a href="https://www.gismeteo.ru/" target="_blank" title="Погода">
+                                <img alt="Погода" src="https://nst1.gismeteo.ru/assets/flat-ui/img/logo-mini2.png" align="middle" border="0" width="11" height="16" />
+                                <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/informer/gismeteo.svg" border="0" align="middle" style="left: 5px; top:1px">
+                            </a>
+                            </div>
+                            <div class="rightCol">
+                                <a href="https://www.gismeteo.ru/" target="_blank" title="Погода в Москве на 2 недели">
+                                    <img src="https://nst1.gismeteo.ru/assets/flat-ui/img/informer/forecast-2weeks.ru.svg" border="0" align="middle" style="top:auto" alt="Погода в Москве на 2 недели">
+                                </a>
+                            </div>
+                        </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<script async src="https://www.gismeteo.ru/api/informer/getinformer/?hash=jd1jkgrl4WWTAR"></script>
+<!-- Gismeteo informer END -->
+</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         function checkDeviceType() {
@@ -691,12 +725,17 @@ if (isMobile) {
             var isMobile = "<%=isMobile%>"; // Задаем значение brawser на стороне клиента
             console.log(isMobile);
             console.log("Width: " + window.innerWidth);
-               if ((window.innerWidth <= 885 || isMobile === "true") || currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
+               if (currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
+               if (window.innerWidth <= 885 || isMobile === "true") {
+               document.getElementById("weatherWidget").style.display = "none";
+               document.getElementById("otherWidget").style.display = "none";
+               } else {
                        document.getElementById("weatherWidget").style.display = "none";
-                       <!--document.getElementById("otherWidget").style.display = "block";-->
+                       document.getElementById("otherWidget").style.display = "block";
+                       }
                    } else {
                        document.getElementById("weatherWidget").style.display = "block";
-                       <!--document.getElementById("otherWidget").style.display = "none";-->
+                       document.getElementById("otherWidget").style.display = "none";
                    }
         }
 

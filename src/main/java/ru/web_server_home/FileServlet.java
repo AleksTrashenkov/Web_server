@@ -242,7 +242,6 @@ public class FileServlet extends HttpServlet {
                     Date creationDate = new Date(creationTime);
 
                     String ipAdres = request.getRemoteAddr();
-
                     request.setAttribute("ipAdres", ipAdres);
                     request.setAttribute("creationDate", creationDate);
                     request.setAttribute("currentPage", currentPage);
