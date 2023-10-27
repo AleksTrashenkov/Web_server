@@ -58,38 +58,36 @@
         .upload-form input[type="submit"]:hover {
             background-color: #0056b3;
         }
-.file-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.file-item {
-    display: flex; /* Используем display: flex вместо flex-wrap */
-    justify-content: space-between; /* Разделяем элементы на кнопки и текст */
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-.file-icon {
-    margin-right: 10px;
-    font-size: 24px;
-}
-
-.file-name {
-    flex: 1;
-    text-overflow: ellipsis;
-    margin-right: 10px;
-    white-space: nowrap; /* Запрещаем перенос слов */
-    overflow: hidden;
-}
-
-.file-actions {
-    gap: 10px; /* Добавляем промежуток между кнопками */
-    /* По умолчанию кнопки будут влево */
-}
-
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .file-item {
+            display: flex;
+            flex-wrap: wrap; /* Wraps items if too narrow */
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .file-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .file-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+        }
+               .file-actions {
+                   float: right; /* Помещаем элементы справа */
+                   margin-left: 10px;
+                   display: flex;
+                   align-items: center; /* Выравниваем элементы по вертикальному центру */
+                   gap: 10px;
+               }
         .file-links {
             text-decoration: none;
             color: #007bff;
@@ -496,7 +494,7 @@
             <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
         </form>
     </div>
-<ul class="file-list" id="file-list-id">
+<ul class="file-list">
     <c:forEach var="file" items="${files}">
         <li class="file-item">
             <span class="file-icon">
@@ -565,7 +563,7 @@
                         <a class="file-links" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
                     </c:otherwise>
                 </c:choose>
-
+                <p></p>
             </span>
 <span class="file-actions">
     <button type="button" class="file-link" onclick="showRenameDialog('${file.name}')">Переименовать</button>
@@ -587,11 +585,11 @@
     </c:forEach>
     </div>
 </ul>
-<div class="pagination">
-           <button id="prevPage" class="pagination-button">Предыдущая</button>
-           <span id="currentPage" class="pagination-current-page">1</span>
-           <button id="nextPage" class="pagination-button">Следующая</button>
-            </div>
+        <div class="pagination">
+            <button id="prevPage" class="pagination-button">Предыдущая</button>
+            <span id="currentPage" class="pagination-current-page">1</span>
+            <button id="nextPage" class="pagination-button">Следующая</button>
+        </div>
 <%
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android");
@@ -736,7 +734,7 @@ if (isMobile) {
             checkDeviceType(); // Вызовем функцию при загрузке страницы
         });
 
-            const videoList = document.getElementById("file-list-id");
+            const videoList = document.querySelector(".file-list");
             const prevPageButton = document.getElementById("prevPage");
             const nextPageButton = document.getElementById("nextPage");
 
