@@ -58,33 +58,38 @@
         .upload-form input[type="submit"]:hover {
             background-color: #0056b3;
         }
-        .file-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .file-item {
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-            flex-wrap: wrap; /* Wraps items if too narrow */
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        .file-icon {
-            margin-right: 10px;
-            font-size: 24px;
-        }
-        .file-name {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 10px;
-        }
-        .file-actions {
-            display: flex;
-            gap: 10px;
-        }
+.file-item {
+    display: flex; /* Используем display: flex вместо flex-wrap */
+    justify-content: space-between; /* Разделяем элементы на кнопки и текст */
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.file-icon {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+.file-name {
+    flex: 1;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    white-space: nowrap; /* Запрещаем перенос слов */
+    overflow: hidden;
+}
+
+.file-actions {
+    gap: 10px; /* Добавляем промежуток между кнопками */
+    /* По умолчанию кнопки будут влево */
+}
+
         .file-links {
             text-decoration: none;
             color: #007bff;
@@ -560,7 +565,7 @@
                         <a class="file-links" href="<c:url value='/cloud/${file.name}'><c:param name='action' value='download' /><c:param name='currentPath' value='${pageContext.request.pathInfo}' /></c:url>">${file.name}</a>
                     </c:otherwise>
                 </c:choose>
-                <p style="font-size: 10px">Изменено: <%= request.getAttribute("creationDate") %></p>
+
             </span>
 <span class="file-actions">
     <button type="button" class="file-link" onclick="showRenameDialog('${file.name}')">Переименовать</button>
@@ -582,11 +587,11 @@
     </c:forEach>
     </div>
 </ul>
-        <div class="pagination">
-            <button id="prevPage" class="pagination-button">Предыдущая</button>
-            <span id="currentPage" class="pagination-current-page">1</span>
-            <button id="nextPage" class="pagination-button">Следующая</button>
-        </div>
+<div class="pagination">
+           <button id="prevPage" class="pagination-button">Предыдущая</button>
+           <span id="currentPage" class="pagination-current-page">1</span>
+           <button id="nextPage" class="pagination-button">Следующая</button>
+            </div>
 <%
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android");
