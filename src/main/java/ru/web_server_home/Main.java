@@ -17,7 +17,78 @@ public class Main {
     //public static String directory = "/Users/trashenkov_aleks/Downloads/";
     public static Multimap<String, String> structureCloud = ArrayListMultimap.create();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
+/*        // Укажите путь к исполняемому файлу FFmpeg
+        String ffmpegPath = "C:\\Users\\server\\OneDrive\\Рабочий стол\\ffmpeg-6.0-full_build\\ffmpeg-6.0-full_build\\bin\\ffmpeg.exe";
+
+        // Укажите путь к вашему файлу 3GP и MP4
+        String inputVideo = "D:\\cloud\\FILES KATERINA\\Фото\\Видео\\Пусь и груша (3).3gp";
+        String outputVideo = "D:\\cloud\\FILES KATERINA\\Фото\\Видео\\Пусь и груша (3)_convert.mp4";
+
+        // Создайте команду для конвертации
+        String[] cmd = { ffmpegPath, "-i", inputVideo, "-c:v", "libx264", "-strict", "-2", outputVideo };
+
+        // Запустите процесс FFmpeg
+        ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+        Process process = processBuilder.start();
+
+        // Дождитесь завершения процесса
+        int exitCode = process.waitFor();
+        if (exitCode == 0) {
+            // Конвертация успешно завершена
+            process.destroy();
+            System.out.println("Конвертация успешно завершена!");
+        } else {
+            // Произошла ошибка
+            System.out.println("Произошла ошибка во время конвертации.");
+        }*/
+/*
+        try {
+            Process process = Runtime.getRuntime().exec("python -");
+
+            // Получите входной и выходной потоки процесса
+            InputStream inputStream = process.getInputStream();
+            InputStream errorStream = process.getErrorStream();
+            OutputStream outputStream = process.getOutputStream();
+
+            // Создайте читатели для потоков
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+
+            // Создайте писателя для стандартного ввода
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream));
+
+            // Сохраните Python код в файл
+            String pythonCode =
+                    "import g4f\n" +
+                            "response = g4f.ChatCompletion.create(\n" +
+                            "    model=\"gpt-3.5-turbo\",\n" +
+                            "    messages=[{\"role\": \"user\", \"content\": \"Hello\"}],\n" +
+                            "    stream=True,\n" +
+                            ")\n" +
+                            "for message in response:\n" +
+                            "    print(message, flush=True, end='')\n";
+            writer.println(pythonCode);
+            writer.flush();
+            writer.close();
+
+            // Прочитайте и выведите вывод Python
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Output: " + line);
+            }
+
+            // Прочитайте и выведите ошибки Python
+            while ((line = errorReader.readLine()) != null) {
+                System.out.println("Error: " + line);
+            }
+
+            // Дождитесь завершения выполнения Python
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+*/
 
 /*        String programPath = "C:\\Program Files\\SQLite Expert\\Personal 5\\SQLiteExpertPers64.exe"; // Укажите полный путь к программе
 

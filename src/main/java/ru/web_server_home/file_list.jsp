@@ -64,7 +64,7 @@
             margin: 0;
         }
         .file-item {
-            display: flex;
+
             flex-wrap: wrap; /* Wraps items if too narrow */
             align-items: center;
             padding: 10px 0;
@@ -215,39 +215,40 @@
                 .btn-secondary {
                     background-color: #6c757d;
                 }
-                /* Стили для элементов пагинации */
-                .pagination {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 20px;
-                }
+                       /* Стили для элементов пагинации */
+                       .pagination {
+                           display: flex;
+                           justify-content: center;
+                           align-items: center;
+                           margin-top: 20px;
+                       }
 
-                .pagination a, .pagination span {
-                    padding: 8px 12px;
-                    margin: 0 5px;
-                    text-align: center;
-                    text-decoration: none;
-                    border: 1px solid #ddd;
-                    border-radius: 3px;
-                    cursor: pointer;
-                    transition: background-color 0.3s, color 0.3s;
-                }
+                       .pagination a, .pagination button {
+                           padding: 8px 12px;
+                           margin: 0 5px;
+                           text-align: center;
+                           text-decoration: none;
+                           border: 1px solid #007bff; /* Измените цвет границы для активных элементов */
+                           border-radius: 3px;
+                           cursor: pointer;
+                           color: #007bff; /* Измените цвет текста для активных элементов */
+                           transition: background-color 0.3s, color 0.3s;
+                       }
 
-                .pagination a:hover {
-                    background-color: #f2f2f2;
-                }
+                       .pagination a:hover, .pagination button:hover {
+                           background-color: #f2f2f2;
+                       }
 
-                .pagination .current-page {
-                    background-color: #007bff;
-                    color: white;
-                    border: 1px solid #007bff;
-                }
+                       .pagination .current-page {
+                           background-color: #007bff;
+                           color: white;
+                           border: 1px solid #007bff;
+                       }
 
-                .pagination .disabled {
-                    color: #ddd;
-                    pointer-events: none;
-                }
+                       .pagination button:disabled {
+                           color: #ddd;
+                           pointer-events: none;
+                       }
 
                .create-folder-button {
                    background-color: #007bff; /* Синий цвет для кнопки "Создать папку" */
@@ -490,7 +491,7 @@
             <input type="hidden" name="currentPath" value="${pageContext.request.pathInfo}">
         </form>
     </div>
-<ul class="file-list">
+<ul class="file-list" id="file-list-id">
     <c:forEach var="file" items="${files}">
         <li class="file-item">
             <span class="file-icon">
@@ -579,7 +580,13 @@
     </span>
         </li>
     </c:forEach>
+    </div>
 </ul>
+        <div class="pagination">
+            <button id="prevPage" class="pagination-button">Предыдущая</button>
+            <span id="currentPage" class="pagination-current-page">1</span>
+            <button id="nextPage" class="pagination-button">Следующая</button>
+        </div>
 <%
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.toLowerCase().contains("mobile") || userAgent.toLowerCase().contains("android");
@@ -606,46 +613,6 @@ if (isMobile) {
             <!-- Здесь можно добавить элементы списка видео -->
         </ul>
     </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        function checkDeviceType() {
-            currentURL = window.location.href;
-               if (window.innerWidth <= 885) {
-
-                       document.getElementById("videoplayercontainer").style.display = "none";
-                   } else {
-
-                       document.getElementById("videoplayercontainer").style.display = "block";
-                   }
-        }
-
-        window.addEventListener("load", checkDeviceType);
-        window.addEventListener("resize", checkDeviceType);
-
-        checkDeviceType(); // Вызовем функцию при загрузке страницы
-    });
-</script>
-<div class="pagination">
-    <c:choose>
-        <c:when test="${currentPage > 1}">
-            <a href="<c:url value=''><c:param name='page' value='${currentPage - 1}' /><c:param name='currentPath' value='${currentPath}' /><c:param name='action' value='download' /></c:url>">Предыдущая</a>
-        </c:when>
-        <c:otherwise>
-            <span class="disabled">Предыдущая</span>
-        </c:otherwise>
-    </c:choose>
-
-    <span class="current-page">${currentPage}</span>
-
-    <c:choose>
-        <c:when test="${files.size() >= 15}">
-            <a href="<c:url value=''><c:param name='page' value='${currentPage + 1}' /><c:param name='action' value='download' /></c:url>">Следующая</a>
-        </c:when>
-        <c:otherwise>
-            <span class="disabled">Следующая</span>
-        </c:otherwise>
-    </c:choose>
 </div>
 <!-- Погодный информер будет размещен справа вне зоны с файлами -->
 <div class="weather-widget" id="weatherWidget">
@@ -716,15 +683,12 @@ if (isMobile) {
 </div>
 <script async src="https://www.gismeteo.ru/api/informer/getinformer/?hash=jd1jkgrl4WWTAR"></script>
 <!-- Gismeteo informer END -->
-</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         function checkDeviceType() {
         // Определите текущий URL и покажите соответствующий информер
             var currentURL = window.location.href;
             var isMobile = "<%=isMobile%>"; // Задаем значение brawser на стороне клиента
-            console.log(isMobile);
-            console.log("Width: " + window.innerWidth);
                if (currentURL.startsWith("https://192.168.88.47/home_cloud/cloud/")) {
                if (window.innerWidth <= 885 || isMobile === "true") {
                document.getElementById("weatherWidget").style.display = "none";
@@ -749,6 +713,87 @@ if (isMobile) {
 
         checkDeviceType(); // Вызовем функцию при загрузке страницы
     });
+        document.addEventListener("DOMContentLoaded", function() {
+            function checkDeviceType() {
+                currentURL = window.location.href;
+                   if (window.innerWidth <= 885) {
+
+                           document.getElementById("videoplayercontainer").style.display = "none";
+                       } else {
+
+                           document.getElementById("videoplayercontainer").style.display = "block";
+                       }
+            }
+
+            window.addEventListener("load", checkDeviceType);
+            window.addEventListener("resize", checkDeviceType);
+
+            checkDeviceType(); // Вызовем функцию при загрузке страницы
+        });
+
+            const videoList = document.getElementById("file-list-id");
+            const prevPageButton = document.getElementById("prevPage");
+            const nextPageButton = document.getElementById("nextPage");
+
+            // Настройка пагинации
+            const videosPerPage = 10;
+            let currentPage = 1;
+
+            let totalVideos = ${fn:length(files)};
+            let totalPages = Math.ceil(totalVideos / videosPerPage);
+
+           // Найдите элемент, в котором будет отображаться текущая страница
+           const currentPageElement = document.getElementById("currentPage");
+
+           // Функция для обновления текущей страницы
+           function updateCurrentPage() {
+               currentPageElement.textContent = currentPage;
+           }
+
+            function showVideosForPage(page) {
+                const start = (page - 1) * videosPerPage;
+                const end = start + videosPerPage;
+                const videoItems = videoList.children;
+
+                for (let i = 0; i < totalVideos; i++) {
+                    if (i >= start && i < end) {
+                        videoItems[i].style.display = "block";
+                    } else {
+                        videoItems[i].style.display = "none";
+                    }
+                }
+            }
+
+            function updatePaginationButtons() {
+                prevPageButton.disabled = currentPage === 1;
+                nextPageButton.disabled = currentPage === totalPages;
+            }
+            // Показать видео для первой страницы
+                showVideosForPage(currentPage);
+                updatePaginationButtons();
+
+            // Обработчик нажатия на кнопку "Предыдущая"
+            prevPageButton.addEventListener("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showVideosForPage(currentPage);
+                    updatePaginationButtons();
+                    updateCurrentPage(); // Обновляем номер текущей страницы
+                }
+            });
+
+            // Обработчик нажатия на кнопку "Следующая"
+            nextPageButton.addEventListener("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showVideosForPage(currentPage);
+                    updatePaginationButtons();
+                    updateCurrentPage(); // Обновляем номер текущей страницы
+                }
+
+        });
+// Вызов функции для инициализации значения текущей страницы
+        updateCurrentPage();
 </script>
 <div class="footer">
     <small>© Т.А.В. - 2023</small>

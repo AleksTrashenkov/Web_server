@@ -137,13 +137,10 @@ public class FileServlet extends HttpServlet {
                 showFolderContents(request, response, requestedFilePath);
             } else {
                 // Если и файл не существует, и папка не существует, то выведите сообщение об ошибке.
-               // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
+                // response.sendError(HttpServletResponse.SC_NOT_FOUND, "Folder or File not found");
                 //serveFile(requestedFilePath, response, request);
             }
         }
-    }
-    public static void getIPClient () {
-
     }
     private void serveFileLoader(String requestedFilePath, HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
         String filePath = UPLOAD_DIRECTORY + requestedFilePath;
@@ -182,24 +179,16 @@ public class FileServlet extends HttpServlet {
             if (folder.exists() && folder.isDirectory()) {
                 List<File> filesList = Arrays.asList(folder.listFiles());
 
-                int itemsPerPage = 15;
-                String pageParam = request.getParameter("page");
-                int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                int startIdx = (currentPage - 1) * itemsPerPage;
-                int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
-
-                List<File> itemsToShow = filesList.subList(startIdx, endIdx);
-
                 long creationTime = folder.lastModified();
-                Date creationDate = new Date(creationTime);
+                Instant instant = Instant.ofEpochMilli(creationTime);
+                LocalDateTime lastModCreat = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                String formattedDateTime = lastModCreat.format(dateTimeFormatter);
                 String ipAdres = request.getRemoteAddr();
 
                 request.setAttribute("ipAdres", ipAdres);
-                request.setAttribute("creationDate", creationDate);
-                request.setAttribute("currentPage", currentPage);
-                request.setAttribute("itemsPerPage", itemsPerPage);
-                request.setAttribute("files", itemsToShow);
-                request.setAttribute("filesList", filesList);
+                request.setAttribute("creationDate", formattedDateTime);
+                request.setAttribute("files", filesList);
                 request.setAttribute("currentPath", folderPath.replace("D:", "home_cloud"));
                 request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
             } else {
@@ -230,26 +219,16 @@ public class FileServlet extends HttpServlet {
                 if (folder.exists() && folder.isDirectory()) {
                     List<File> filesList = Arrays.asList(folder.listFiles());
 
-                    int itemsPerPage = 15;
-                    String pageParam = request.getParameter("page");
-                    int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
-                    int startIdx = (currentPage - 1) * itemsPerPage;
-                    int endIdx = Math.min(startIdx + itemsPerPage, filesList.size());
-
-                    List<File> itemsToShow = filesList.subList(startIdx, endIdx);
-
                     long creationTime = folder.lastModified();
-                    Date creationDate = new Date(creationTime);
+                    Instant instant = Instant.ofEpochMilli(creationTime);
+                    LocalDateTime lastModCreat = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                    String formattedDateTime = lastModCreat.format(dateTimeFormatter);
 
                     String ipAdres = request.getRemoteAddr();
                     request.setAttribute("ipAdres", ipAdres);
-                    request.setAttribute("creationDate", creationDate);
-                    request.setAttribute("currentPage", currentPage);
-                    request.setAttribute("itemsPerPage", itemsPerPage);
-                    request.setAttribute("fileList", filesList);
-                    request.setAttribute("endIdx", endIdx);
-                    request.setAttribute("files", itemsToShow);
-                    request.setAttribute("filesList", filesList);
+                    request.setAttribute("creationDate", formattedDateTime);
+                    request.setAttribute("files", filesList);
                     request.setAttribute("currentPath", folderPath.replace("D:", "home_cloud"));
                     request.getRequestDispatcher("/WEB-INF/jsp/file_list.jsp").forward(request, response);
                 } else {showFolderContents(request, response, requestedFilePath);}
